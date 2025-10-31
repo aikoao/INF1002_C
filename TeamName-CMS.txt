@@ -1,4 +1,5 @@
-2301234 Joshua Chen Software Engineering 70.5
-2501122 Zhang Zheng Cheng Applied Computing 99.2
-2201234 Isaac Teo Computer Science 63.4
-2304567 John Levoy Digital Supply Chain 85.9
+2301234 (Joshua Chen) Software Engineering 70.5
+2501122 (Zhang Zheng Cheng) Applied Computing 99.2
+2201234 (Isaac Teo) Computer Science 63.4
+2304567 (John Levoy) Digital Supply Chain 85.9
+2500837 (Damien Teh) Applied Computing 88.6
