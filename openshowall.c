@@ -36,7 +36,7 @@ void openDatabase() {
             // Extract mark from the end of temp_prog
             char *mark_str = strrchr(temp_prog, ' ');
             if(mark_str != NULL){ // Found a space before the mark
-                students[student_count].mark = atof(mark_str + 1);
+                students[student_count].mark = atof(mark_str + 1); 
 
                 // Remove the mark from the programme string
                 *mark_str = '\0';
