@@ -126,6 +126,27 @@ void saveDatabase(struct Student students[], int count){
 
 }
 
+void queryStudent(struct Student students[], int studentcount) {
+    int queryId;
+    printf("Enter the student ID to search: ");
+    scanf("%d", &queryId);
+    getchar();
+
+    int found = 0;
+    for (int i = 0; i < studentcount; i++) {
+        if (students[i].id == queryId) {
+            printf("Record Found:\n");
+            printf("%-10s %-22s %-26s %-8s\n", "ID", "Name", "Programme", "Mark");
+            printf("%-10d %-22s %-26s %-8.2f\n", students[i].id, students[i].name, students[i].programme, students[i].mark);
+            found = 1;
+            break;
+        }
+    }
+    if (!found) {
+        printf("Warning: No record found with student ID %d.\n", queryId);
+    }
+}
+
 int main() {
 
     printf("--Declaration--\n");
@@ -183,6 +204,9 @@ int main() {
         }
         else if(strcmp(userinput2, "SAVE") == 0){
             saveDatabase(students, student_count); // Save changes to the database file
+        }
+        else if (strcmp(userinput2, "QUERY") == 0) {
+            queryStudent(students, student_count);
         }
         else{
             printf("Invalid input. Please try again.\n");
