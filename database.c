@@ -108,8 +108,3 @@ void query_record() {
 void insert_record() {
     printf("Insert feature - Coming soon!\n");
 }
-
-void delete_record() {
-    printf("Delete feature - Coming soon!\n");
-}
-

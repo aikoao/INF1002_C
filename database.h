@@ -27,6 +27,6 @@ void sort_by_mark(void);
 //void update_record();      // Aiko
 //void query_record();       // Andrew  
 //void insert_record();      // Xin Huei
-//void delete_record();      // Damien
+void delete_record(const char* command);      // Damien
 
 #endif // end of the DATABASE_H

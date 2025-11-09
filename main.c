@@ -64,7 +64,7 @@ int main() {
             //insert_record();
         }
         else if(strstr(userinput, "DELETE") != NULL) {
-            //delete_record();
+            delete_record(userinput); 
         }
         else if(strcmp(userinput, "SAVE") == 0) {
             saveDatabase();
