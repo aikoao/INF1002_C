@@ -2,6 +2,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "database.h"
+#include "query.h"  
 
 int main() {
     // display declaration 
@@ -54,16 +55,16 @@ int main() {
             showAll();
         }
         else if(strstr(userinput, "UPDATE") != NULL) {
-            update_record();
+            //update_record();
         }
         else if(strstr(userinput, "QUERY") != NULL) {
-            query_record();
+            queryStudent(students, student_count);
         }
         else if(strstr(userinput, "INSERT") != NULL) {
-            insert_record();
+            //insert_record();
         }
         else if(strstr(userinput, "DELETE") != NULL) {
-            delete_record();
+            //delete_record();
         }
         else if(strcmp(userinput, "SAVE") == 0) {
             saveDatabase();

@@ -24,9 +24,9 @@ void sort_by_id(void);
 void sort_by_mark(void);
 
 // Command functions (Team)
-void update_record();      // Aiko
-void query_record();       // Andrew  
-void insert_record();      // Xin Huei
-void delete_record();      // Damien
+//void update_record();      // Aiko
+//void query_record();       // Andrew  
+//void insert_record();      // Xin Huei
+//void delete_record();      // Damien
 
 #endif // end of the DATABASE_H
