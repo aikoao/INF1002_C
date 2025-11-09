@@ -2,15 +2,18 @@
 #include <string.h>
 #include "database.h"
 
-void update_record() {
+void update_record(const char *command) {
+    
     int search_id;
     char input[100];
     
-    printf("P4_8: UPDATE ID=");
-    fgets(input, sizeof(input), stdin);
-    sscanf(input, "%d", &search_id);
+    // extract id from user input format
+    if (sscanf(command, "UPDATE ID=%d", &search_id) != 1) {
+        printf("CMS: Invalid UPDATE format. Use: UPDATE ID=number\n");
+        return;
+    }
     
-    // Search for the record
+    // search for record in database
     int record = -1;
     for (int i = 0; i < student_count; i++) {
         if (students[i].id == search_id) {
@@ -24,7 +27,7 @@ void update_record() {
         return;
     }
     
-    // Record found - get new data
+    // record is found
     printf("CMS: Please enter the new data for each column:\n");
     
     printf("Name: ");
