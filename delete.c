@@ -7,7 +7,6 @@
 void delete_record(const char* command) {
     int id = -1;
 
-    // Convert command to uppercase for checking
     char upper[50];
     strcpy(upper, command);
     for (int i = 0; upper[i]; i++)
@@ -20,7 +19,6 @@ void delete_record(const char* command) {
 
     id = atoi(command + 10);
 
-    // Search for student
     int index = -1;
     for (int i = 0; i < student_count; i++) {
         if (students[i].id == id) {
@@ -34,7 +32,7 @@ void delete_record(const char* command) {
         return;
     }
 
-    // Confirm deletion
+    // Confirmation
     printf("CMS: Are you sure you want to delete record with ID=%d? Type \"Y\" to confirm or type \"N\" to cancel.\n", id);
     printf("P4_8: ");
     char confirm[10];
@@ -57,3 +55,4 @@ void delete_record(const char* command) {
 
     printf("CMS: The record with ID=%d is successfully deleted.\n", id);
 }
+
