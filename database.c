@@ -101,10 +101,6 @@ void sort_by_mark(void) {
     }
 }
 
-void update_record() {
-    printf("Update feature - Coming soon!\n");
-}
-
 void query_record() {
     printf("Query feature - Coming soon!\n");
 }

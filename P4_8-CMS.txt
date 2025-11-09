@@ -1,5 +1,5 @@
 2201234 (Isaac Teo) Computer Science 63.40
-2301234 (Joshua Chen) Software Engineering 70.50
+2301234 (Andrew Gan) Electrical Engineering 20.00
 2304567 (John Levoy) Digital Supply Chain 85.90
 2500837 (Damien Teh) Applied Computing 88.60
 2501122 (Zhang Zheng Cheng) Applied Computing 99.20
