@@ -12,7 +12,7 @@ int main() {
     printf("Meanwhile, the students must also ensure that their work is not accessible by others. ");
     printf("Where such plagiarism is detected, both of the assessments involved will receive ZERO mark.\n");
     printf("We hereby declare that: \n");
-    printf(" - We fully understand and agree to the abovementioned plagiarism policy.\n");
+    printf(" - We fully understand and agree to the above mentioned plagiarism policy.\n");
     printf(" - We did not copy any code from others or from other places.\n");
     printf(" - We did not share our codes with others or upload to any other places for public access and will not do that in the future.\n");
     printf(" - We agree that our project will receive Zero mark if there is any plagiarism detected.\n");
@@ -44,14 +44,17 @@ int main() {
             openDatabase();
         }
         else if(strcmp(userinput, "SHOW ALL SORT BY ID") == 0) {
+            printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
             sort_by_id();
-            showAll();
+            showAll();  
         }
         else if(strcmp(userinput, "SHOW ALL SORT BY MARK") == 0) {
+            printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
             sort_by_mark();
             showAll();
         }
         else if(strcmp(userinput, "SHOW ALL") == 0) {
+            printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
             showAll();
         }
         else if(strstr(userinput, "UPDATE") != NULL) {
