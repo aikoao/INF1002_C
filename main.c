@@ -58,7 +58,7 @@ int main() {
             showAll();
         }
         else if(strstr(userinput, "UPDATE") != NULL) {
-            //update_record();
+            update_record(userinput);
         }
         else if(strstr(userinput, "QUERY") != NULL) {
             queryStudent(students, student_count);

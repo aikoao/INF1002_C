@@ -24,7 +24,7 @@ void sort_by_id(void);
 void sort_by_mark(void);
 
 // Command functions (Team)
-//void update_record();      // Aiko
+void update_record(const char *command);      // Aiko
 //void query_record();       // Andrew  
 //void insert_record();      // Xin Huei
 void delete_record(const char* command);      // Damien
