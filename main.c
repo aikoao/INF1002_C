@@ -3,6 +3,7 @@
 #include <ctype.h>
 #include "database.h"
 #include "query.h"  
+#include "insert.h"
 
 int main() {
     // display declaration 
@@ -30,7 +31,7 @@ int main() {
     
     
     while(1) {
-        char userinput[30];
+        char userinput[256];
         printf("P4_8: ");
         fgets(userinput, sizeof(userinput), stdin);
         userinput[strlen(userinput)-1] = '\0';
@@ -64,7 +65,7 @@ int main() {
             queryStudent(students, student_count);
         }
         else if(strstr(userinput, "INSERT") != NULL) {
-            //insert_record();
+            insert_record(userinput);
         }
         else if(strstr(userinput, "DELETE") != NULL) {
             delete_record(userinput); 

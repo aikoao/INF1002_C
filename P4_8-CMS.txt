@@ -3,3 +3,4 @@
 2304567 (John Levoy) Digital Supply Chain 85.90
 2500837 (Damien Teh) Applied Computing 88.60
 2501122 (Zhang Zheng Cheng) Applied Computing 99.20
+2402136 (ALICE TAN) APPLIED COMPUTING 100.00
