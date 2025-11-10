@@ -32,6 +32,8 @@ int main() {
     
     while(1) {
         char userinput[256];
+        char command[50];
+        char filename[100] = "";
         printf("P4_8: ");
         fgets(userinput, sizeof(userinput), stdin);
         userinput[strlen(userinput)-1] = '\0';
@@ -39,24 +41,42 @@ int main() {
         // Convert to uppercase
         for(int i=0; userinput[i]; i++) 
             userinput[i] = toupper(userinput[i]);
+
+        sscanf(userinput, "%s %s", command, filename);
         
         // Handle features
-        if(strcmp(userinput, "OPEN") == 0) {
-            openDatabase();
+        if(strcmp(command, "OPEN") == 0) {
+            if(strlen(filename) == 0 || filename[0] == '\0'){
+                printf("CMS: Please specify the database file name!\n");
+            } else {
+                openDatabase(filename);
+            }
         }
         else if(strcmp(userinput, "SHOW ALL SORT BY ID") == 0) {
-            printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
-            sort_by_id();
-            showAll();  
+            if(student_count == 0){
+                printf("CMS: Error, no records found! Please open the database file first.\n");
+            } else {
+                printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
+                sort_by_id();
+                showAll();  
+            }
         }
         else if(strcmp(userinput, "SHOW ALL SORT BY MARK") == 0) {
-            printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
-            sort_by_mark();
-            showAll();
+            if(student_count == 0){
+                printf("CMS: Error, no records found! Please open the database file first.\n");
+            } else {
+                printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
+                sort_by_mark();
+                showAll();
+            }
         }
         else if(strcmp(userinput, "SHOW ALL") == 0) {
-            printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
-            showAll();
+            if(student_count == 0){
+                printf("CMS: Error, no records found! Please open the database file first.\n");
+            } else {
+                printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
+                showAll();
+            }
         }
         else if(strstr(userinput, "UPDATE") != NULL) {
             update_record(userinput);
@@ -71,13 +91,17 @@ int main() {
             delete_record(userinput); 
         }
         else if(strcmp(userinput, "SAVE") == 0) {
-            saveDatabase();
+            if(student_count == 0){
+                printf("CMS: Error, no records to save! Please open the database file first!\n");
+            } else {
+                saveDatabase();
+            }
         }
         else if(strcmp(userinput, "EXIT") == 0) {
             break;
         }
         else {
-            printf("Invalid feature\n");
+            printf("CMS: Error, invalid feature!\n");
         }
     }
     return 0;
