@@ -81,8 +81,11 @@ int main() {
         else if(strstr(userinput, "UPDATE") != NULL) {
             update_record(userinput);
         }
-        else if(strstr(userinput, "QUERY") != NULL) {
-            queryStudent(students, student_count);
+        else if (strcmp(userinput, "QUERY ID") == 0) {
+            queryStudentByID(students, student_count);
+        }
+        else if (strcmp(userinput, "QUERY NAME") == 0) {
+            queryStudentByName(students, student_count);
         }
         else if(strstr(userinput, "INSERT") != NULL) {
             insert_record(userinput);

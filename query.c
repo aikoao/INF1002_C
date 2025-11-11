@@ -1,14 +1,13 @@
 #include <stdio.h>
-#include "query.h"   
-#include "database.h"
+#include <string.h>
+#include "query.h"
 
-void queryStudent(Student students[], int student_count) {
-    int queryId;
+void queryStudentByID(Student students[], int student_count) {
+    int queryId, found = 0;
     printf("Enter the student ID to search: ");
     scanf("%d", &queryId);
     getchar();
 
-    int found = 0;
     for (int i = 0; i < student_count; i++) {
         if (students[i].id == queryId) {
             printf("Record Found:\n");
@@ -21,5 +20,28 @@ void queryStudent(Student students[], int student_count) {
     }
     if (!found) {
         printf("Warning: No record found with student ID %d.\n", queryId);
+    }
+}
+
+void queryStudentByName(Student students[], int student_count) {
+    char queryName[NAME_LENGTH];
+    int found = 0;
+    printf("Enter the student name to search: ");
+    fgets(queryName, sizeof(queryName), stdin);
+    queryName[strcspn(queryName, "\n")] = 0;
+
+    for (int i = 0; i < student_count; i++) {
+        if (strcasecmp(students[i].name, queryName) == 0) {
+            if (!found) {
+                printf("Record(s) Found:\n");
+                printf("%-10s %-22s %-26s %-8s\n", "ID", "Name", "Programme", "Mark");
+            }
+            printf("%-10d %-22s %-26s %-8.2f\n",
+                   students[i].id, students[i].name, students[i].programme, students[i].mark);
+            found = 1;
+        }
+    }
+    if (!found) {
+        printf("Warning: No record found with student name \"%s\".\n", queryName);
     }
 }
