@@ -2,11 +2,16 @@
 #include <string.h>
 #include <ctype.h>
 #include "database.h"
-#include "query.h"  
+#include "query.h"
 #include "insert.h"
 
-int main() {
-    // display declaration 
+/* Uppercase a string in-place (used only for command matching). */
+static void to_upper_inplace(char *s){
+    for (; *s; ++s) *s = (char)toupper((unsigned char)*s);
+}
+
+int main(void) {
+    /* ----- declaration banner ----- */
     printf("--Declaration--\n");
     printf("SIT's policy on copying does not allow the students to copy source code as well as assesment solutions from another person AI or other places. ");
     printf("It is the students' responsibility to guarantee that their assessment solutions are their own work. ");
@@ -26,83 +31,90 @@ int main() {
     printf(" 3. Chong Xinhuei\n");
     printf(" 4. Damien Teh\n");
     printf(" 5. Happy Calista\n");
-    printf("Date: \n");
-    printf("\n");
-    
-    
-    while(1) {
-        char userinput[256];
-        char command[50];
-        char filename[100] = "";
-        printf("P4_8: ");
-        fgets(userinput, sizeof(userinput), stdin);
-        userinput[strlen(userinput)-1] = '\0';
-        
-        // Convert to uppercase
-        for(int i=0; userinput[i]; i++) 
-            userinput[i] = toupper(userinput[i]);
+    printf("Date: \n\n");
 
-        sscanf(userinput, "%s %s", command, filename);
-        
-        // Handle features
-        if(strcmp(command, "OPEN") == 0) {
-            if(strlen(filename) == 0 || filename[0] == '\0'){
+    while (1) {
+        char raw[256];        /* ORIGINAL line (preserve value casing) */
+        char cmd[32] = {0};   /* first token only, uppercased for dispatch */
+        char upperline[256];  /* uppercase copy for SHOW comparisons */
+        char filename[100] = "";
+
+        printf("P4_8: ");
+        if (!fgets(raw, sizeof raw, stdin)) break;
+        raw[strcspn(raw, "\r\n")] = '\0';     /* strip newline */
+
+        /* Extract first token as command, uppercase ONLY that token */
+        sscanf(raw, " %31s", cmd);
+        to_upper_inplace(cmd);
+
+        /* ---- Dispatch ---- */
+        if (strcmp(cmd, "OPEN") == 0) {
+            /* parse filename from ORIGINAL line so filename case is preserved */
+            if (sscanf(raw, " %*s %99s", filename) != 1) {
                 printf("CMS: Please specify the database file name!\n");
             } else {
+                /* Your database.h should declare: void openDatabase(const char *filename); */
                 openDatabase(filename);
             }
         }
-        else if(strcmp(userinput, "SHOW ALL SORT BY ID") == 0) {
-            if(student_count == 0){
-                printf("CMS: Error, no records found! Please open the database file first.\n");
+        else if (strcmp(cmd, "SHOW") == 0) {
+            /* uppercase COPY of whole line for phrase matching */
+            strncpy(upperline, raw, sizeof upperline - 1);
+            upperline[sizeof upperline - 1] = '\0';
+            to_upper_inplace(upperline);
+
+            if (strcmp(upperline, "SHOW ALL SORT BY ID") == 0) {
+                if (student_count == 0) {
+                    printf("CMS: Error, no records found! Please open the database file first.\n");
+                } else {
+                    printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
+                    sort_by_id(); showAll();
+                }
+            } else if (strcmp(upperline, "SHOW ALL SORT BY MARK") == 0) {
+                if (student_count == 0) {
+                    printf("CMS: Error, no records found! Please open the database file first.\n");
+                } else {
+                    printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
+                    sort_by_mark(); showAll();
+                }
+            } else if (strcmp(upperline, "SHOW ALL") == 0) {
+                if (student_count == 0) {
+                    printf("CMS: Error, no records found! Please open the database file first.\n");
+                } else {
+                    printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
+                    showAll();
+                }
             } else {
-                printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
-                sort_by_id();
-                showAll();  
+                printf("CMS: Error, invalid feature!\n");
             }
         }
-        else if(strcmp(userinput, "SHOW ALL SORT BY MARK") == 0) {
-            if(student_count == 0){
-                printf("CMS: Error, no records found! Please open the database file first.\n");
-            } else {
-                printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
-                sort_by_mark();
-                showAll();
-            }
+        else if (strcmp(cmd, "INSERT") == 0) {
+            /* pass ORIGINAL raw line so values' casing is preserved */
+            insert_record(raw);
         }
-        else if(strcmp(userinput, "SHOW ALL") == 0) {
-            if(student_count == 0){
-                printf("CMS: Error, no records found! Please open the database file first.\n");
-            } else {
-                printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
-                showAll();
-            }
+        else if (strcmp(cmd, "UPDATE") == 0) {
+            update_record(raw);
         }
-        else if(strstr(userinput, "UPDATE") != NULL) {
-            update_record(userinput);
+        else if (strcmp(cmd, "DELETE") == 0) {
+            delete_record(raw);
         }
-        else if(strstr(userinput, "QUERY") != NULL) {
+        else if (strcmp(cmd, "QUERY") == 0) {
             queryStudent(students, student_count);
         }
-        else if(strstr(userinput, "INSERT") != NULL) {
-            insert_record(userinput);
-        }
-        else if(strstr(userinput, "DELETE") != NULL) {
-            delete_record(userinput); 
-        }
-        else if(strcmp(userinput, "SAVE") == 0) {
-            if(student_count == 0){
+        else if (strcmp(cmd, "SAVE") == 0) {
+            if (student_count == 0) {
                 printf("CMS: Error, no records to save! Please open the database file first!\n");
             } else {
                 saveDatabase();
             }
         }
-        else if(strcmp(userinput, "EXIT") == 0) {
+        else if (strcmp(cmd, "EXIT") == 0) {
             break;
         }
         else {
             printf("CMS: Error, invalid feature!\n");
         }
     }
+
     return 0;
 }
