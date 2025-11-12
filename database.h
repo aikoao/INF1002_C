@@ -28,5 +28,7 @@ void update_record(const char *command);      // Aiko
 //void query_record();       // Andrew  
 //void insert_record();      // Xin Huei
 void delete_record(const char* command);      // Damien
+void show_help(void);                     // Help menu
+
 
 #endif // end of the DATABASE_H

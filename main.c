@@ -96,6 +96,9 @@ int main() {
         else if(strstr(userinput, "DELETE") != NULL) {
             delete_record(userinput); 
         }
+        else if (strcmp(userinput, "HELP") == 0) {
+            show_help();
+        }
         else if(strcmp(userinput, "SAVE") == 0) {
             if(student_count == 0){
                 printf("CMS: Error, no records to save! Please open the database file first!\n");
@@ -107,7 +110,7 @@ int main() {
             break;
         }
         else {
-            printf("CMS: Error, invalid feature!\n");
+            printf("CMS: Error, invalid feature. Please enter 'HELP' for available commands!\n");
         }
     }
     return 0;
