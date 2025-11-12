@@ -3,6 +3,22 @@
 #include <ctype.h>
 #include "query.h"
 
+
+void gradeRange(const char *grade, float *min, float *max) {
+    if (strcmp(grade, "A+") == 0) {*min = 85; *max = 100;}
+    else if (strcmp(grade, "A") == 0) {*min = 80; *max = 84;}
+    else if (strcmp(grade, "A-") == 0) {*min = 75; *max = 79;}
+    else if (strcmp(grade, "B+") == 0) {*min = 70; *max = 74;}
+    else if (strcmp(grade, "B") == 0) {*min = 65; *max = 69;}
+    else if (strcmp(grade, "B-") == 0) {*min = 60; *max = 64;}
+    else if (strcmp(grade, "C+") == 0) {*min = 55; *max = 59;}
+    else if (strcmp(grade, "C") == 0) {*min = 50; *max = 54;}
+    else if (strcmp(grade, "D+") == 0) {*min = 50; *max = 54;}  // D+, D, C all have same range in your table
+    else if (strcmp(grade, "D") == 0) {*min = 50; *max = 54;}
+    else if (strcmp(grade, "F") == 0) {*min = 0; *max = 49;}
+    else {*min = -1; *max = -1;}
+}
+
 void queryStudentByID(Student students[], int student_count) {
     char idInput[100];
     int queryId, found = 0, valid = 0;
@@ -80,5 +96,36 @@ void queryStudentByProgramme(Student students[], int student_count) {
     }
     if (!found) {
         printf("Warning: No record found with programme \"%s\".\n", queryProg);
+    }
+}
+
+void queryStudentByGrade(Student students[], int student_count) {
+    char gradeInput[4];
+    float minScore, maxScore;
+    int found = 0;
+    printf("Enter the grade to search (e.g. A, B+, C-): ");
+    fgets(gradeInput, sizeof(gradeInput), stdin);
+    gradeInput[strcspn(gradeInput, "\n")] = 0;
+    for (int i = 0; gradeInput[i]; i++) gradeInput[i] = toupper((unsigned char)gradeInput[i]);
+
+    gradeRange(gradeInput, &minScore, &maxScore);
+    if (minScore < 0) {
+        printf("Invalid grade entered.\n");
+        return;
+    }
+
+    for (int i = 0; i < student_count; i++) {
+        if (students[i].mark >= minScore && students[i].mark <= maxScore) {
+            if (!found) {
+                printf("Record(s) Found:\n");
+                printf("%-10s %-22s %-26s %-8s\n", "ID", "Name", "Programme", "Mark");
+            }
+            printf("%-10d %-22s %-26s %-8.2f\n",
+                   students[i].id, students[i].name, students[i].programme, students[i].mark);
+            found = 1;
+        }
+    }
+    if (!found) {
+        printf("Warning: No record found for grade %s.\n", gradeInput);
     }
 }

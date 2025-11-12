@@ -90,6 +90,9 @@ int main() {
         else if (strcmp(userinput, "QUERY PROGRAMME") == 0) {
             queryStudentByProgramme(students, student_count);
         }
+        else if (strcmp(userinput, "QUERY GRADE") == 0) {
+            queryStudentByGrade(students, student_count);
+        }
         else if(strstr(userinput, "INSERT") != NULL) {
             insert_record(userinput);
         }
