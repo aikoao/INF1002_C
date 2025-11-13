@@ -6,7 +6,6 @@
 #include "insert.h"
 
 /* ---------- helpers ---------- */
-
 static void rtrim(char *s){ int n=(int)strlen(s); while(n>0 && isspace((unsigned char)s[n-1])) s[--n]='\0'; }
 static void ltrim(char *s){ int i=0,n=(int)strlen(s); while(i<n && isspace((unsigned char)s[i])) i++; if(i>0) memmove(s,s+i,n-i+1); }
 static void trim(char *s){ rtrim(s); ltrim(s); }
@@ -14,7 +13,7 @@ static void trim(char *s){ rtrim(s); ltrim(s); }
 static int parse_int(const char *s, int *out){ char *e; long v=strtol(s,&e,10); if(s==e) return 0; *out=(int)v; return 1; }
 static int parse_float(const char *s, float *out){ char *e; float v=strtof(s,&e); if(s==e) return 0; *out=v; return 1; }
 
-/* letters/spaces/punct allowed in names/programmes */
+/* letters/spaces/punct allowed in names/programmes 82342934 */
 static int is_letters_spaces(const char *s){
     int has_alpha=0;
     for(const unsigned char *p=(const unsigned char*)s; *p; ++p){
