@@ -4,3 +4,13 @@
 2500837 (Damien Teh) Applied Computing 88.60
 2501122 (Zhang Zheng Cheng) Applied Computing 99.20
 2402136 (ALICE TAN) APPLIED COMPUTING 100.00
+2501256 (Emily Tan) Computer Science 91.30
+2501982 (Marcus Lee) Applied Computing 78.50
+2502312 (Chloe Ng) Business Analytics 83.00
+2403120 (Siti Nurhaliza) Digital Supply Chain 72.60
+2304509 (Daniel Lim) Electrical Engineering 54.00
+2305897 (Rachel Ong) Business Analytics 65.40
+2206002 (Nicholas Tan) Applied Computing 68.80
+2207110 (Wei Jie Foo) Computer Science 87.90
+2508324 (Nurul Huda) Applied Computing 61.75
+2409458 (Jeremy Yeo) Digital Supply Chain 89.90

@@ -20,8 +20,10 @@ extern int student_count; // global variable to mark the current number of stude
 void openDatabase(char *filename);
 void showAll(void);
 void saveDatabase();
-void sort_by_id(void);
-void sort_by_mark(void);
+void sort_by_id_asc(void);
+void sort_by_mark_asc(void);
+void sort_by_id_desc(void);
+void sort_by_mark_desc(void);
 
 // Command functions (Team)
 void update_record(const char *command);      // Aiko

@@ -77,7 +77,7 @@ void saveDatabase(void) {
     printf("CMS: The database file \"P4_8-CMS.txt\" is successfully saved.\n");
 }
 
-void sort_by_id(void) {
+void sort_by_id_asc(void) { // sort by id ascending order 
     for(int i = 0; i < student_count - 1; i++){
         for(int j = 0; j < student_count - i - 1; j++){
             if(students[j].id > students[j + 1].id){ // compare IDs
@@ -89,10 +89,34 @@ void sort_by_id(void) {
     }
 }
 
-void sort_by_mark(void) {
+void sort_by_mark_asc(void) { // sort by mark ascending order 
     for(int i = 0; i < student_count - 1; i++){
         for(int j = 0; j < student_count - i - 1; j++){
             if(students[j].mark > students[j + 1].mark){ // compare Marks
+                Student temp = students[j]; // swap
+                students[j] = students[j + 1];
+                students[j + 1] = temp;
+            }
+        }
+    }
+}
+
+void sort_by_id_desc(void) { // sort by id descending order 
+    for(int i = 0; i < student_count - 1; i++){
+        for(int j = 0; j < student_count - i - 1; j++){
+            if(students[j].id < students[j + 1].id){ // compare IDs
+                Student temp = students[j]; // swap
+                students[j] = students[j + 1]; 
+                students[j + 1] = temp; 
+            }
+        }
+    }
+}
+
+void sort_by_mark_desc(void) { // sort by mark descending order 
+    for(int i = 0; i < student_count - 1; i++){
+        for(int j = 0; j < student_count - i - 1; j++){
+            if(students[j].mark < students[j + 1].mark){ // compare Marks
                 Student temp = students[j]; // swap
                 students[j] = students[j + 1];
                 students[j + 1] = temp;
