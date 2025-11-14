@@ -3,9 +3,11 @@
 
 #include "database.h"  
 
-void queryStudentByID(Student students[], int student_count);
-void queryStudentByName(Student students[], int student_count);
-void queryStudentByProgramme(Student students[], int student_count);
-void queryStudentByGrade(Student students[], int student_count);
+void query_process(const char* input, Student students[], int student_count);
+void queryStudentByID(Student students[], int student_count, const char* idInput);
+void queryStudentByName(Student students[], int student_count, const char* nameInput);
+void queryStudentByProgramme(Student students[], int student_count, const char* progInput);
+void queryStudentByGrade(Student students[], int student_count, const char* gradeInput);
+
 
 #endif

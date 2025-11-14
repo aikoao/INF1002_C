@@ -101,17 +101,8 @@ int main() {
             // Use original_input for UPDATE to preserve case in values
             update_record(original_input);
         }
-        else if (strcmp(userinput, "QUERY ID") == 0) {
-            queryStudentByID(students, student_count);
-        }
-        else if (strcmp(userinput, "QUERY NAME") == 0) {
-            queryStudentByName(students, student_count);
-        }
-        else if (strcmp(userinput, "QUERY PROGRAMME") == 0) {
-            queryStudentByProgramme(students, student_count);
-        }
-        else if (strcmp(userinput, "QUERY GRADE") == 0) {
-            queryStudentByGrade(students, student_count);
+        else if (strstr(userinput, "QUERY") != NULL) {
+            query_process(userinput, students, student_count);
         }
         else if(strstr(userinput, "INSERT") != NULL) {
             insert_record(userinput);

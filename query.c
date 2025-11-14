@@ -19,113 +19,86 @@ void gradeRange(const char *grade, float *min, float *max) {
     else {*min = -1; *max = -1;}
 }
 
-void queryStudentByID(Student students[], int student_count) {
-    char idInput[100];
-    int queryId, found = 0, valid = 0;
-    while (!valid) {
-        printf("Enter the student ID to search (7 digits): ");
-        fgets(idInput, sizeof(idInput), stdin);
-        idInput[strcspn(idInput, "\n")] = 0; // Remove newline
-
-        int len = strlen(idInput);
-        valid = 1;
-        if (len != 7) valid = 0;
-        for (int i = 0; i < len && valid; i++) {
-            if (!isdigit((unsigned char)idInput[i])) valid = 0;
-        }
-        if (!valid)
-            printf("Please input a proper ID (2xxxxxx)\n");
+void query_process(const char* input, Student students[], int student_count) {
+    if (strstr(input, "ID=") != NULL) {
+        const char* idpos = strstr(input, "ID=") + 3;
+        while (*idpos == ' ') idpos++;
+        queryStudentByID(students, student_count, idpos);
     }
-    sscanf(idInput, "%d", &queryId);
+    else if (strstr(input, "NAME=") != NULL) {
+        const char* namepos = strstr(input, "NAME=") + 5;
+        while (*namepos == ' ') namepos++;
+        queryStudentByName(students, student_count, namepos);
+    }
+    else if (strstr(input, "PROGRAMME=") != NULL) {
+        const char* progpos = strstr(input, "PROGRAMME=") + 10;
+        while (*progpos == ' ') progpos++;
+        queryStudentByProgramme(students, student_count, progpos);
+    }
+    else if (strstr(input, "GRADE=") != NULL) {
+        const char* gradepos = strstr(input, "GRADE=") + 6;
+        while (*gradepos == ' ') gradepos++;
+        queryStudentByGrade(students, student_count, gradepos);
+    }
+    else {
+        printf("Invalid QUERY format. Use QUERY ID=xxxxxxx, QUERY NAME=..., QUERY PROG=..., QUERY GRADE=...\n");
+    }
+}
 
+void queryStudentByID(Student students[], int student_count, const char* idInput) {
+    int len = strlen(idInput), valid = 1, queryId, found = 0;
+    if (len != 7) valid = 0;
+    for (int i = 0; i < len && valid; i++)
+        if (!isdigit((unsigned char)idInput[i])) valid = 0;
+    if (!valid) { printf("Please input a proper ID (2xxxxxx)\n"); return; }
+    sscanf(idInput, "%d", &queryId);
     for (int i = 0; i < student_count; i++) {
         if (students[i].id == queryId) {
-            printf("Record Found:\n");
-            printf("%-10s %-22s %-26s %-8s\n", "ID", "Name", "Programme", "Mark");
-            printf("%-10d %-22s %-26s %-8.2f\n",
-                students[i].id, students[i].name, students[i].programme, students[i].mark);
+            printf("Record Found:\n%-10s %-22s %-26s %-8s\n", "ID", "Name", "Programme", "Mark");
+            printf("%-10d %-22s %-26s %-8.2f\n", students[i].id, students[i].name, students[i].programme, students[i].mark);
             found = 1;
             break;
         }
     }
-    if (!found) {
-        printf("Warning: No record found with student ID %d.\n", queryId);
-    }
+    if (!found) { printf("Warning: No record found with student ID %d.\n", queryId); }
 }
 
-void queryStudentByName(Student students[], int student_count) {
-    char queryName[NAME_LENGTH];
+void queryStudentByName(Student students[], int student_count, const char* queryName) {
     int found = 0;
-    printf("Enter the student name to search: ");
-    fgets(queryName, sizeof(queryName), stdin);
-    queryName[strcspn(queryName, "\n")] = 0;
-
     for (int i = 0; i < student_count; i++) {
         if (strcasecmp(students[i].name, queryName) == 0) {
-            if (!found) {
-                printf("Record(s) Found:\n");
-                printf("%-10s %-22s %-26s %-8s\n", "ID", "Name", "Programme", "Mark");
-            }
-            printf("%-10d %-22s %-26s %-8.2f\n",
-                   students[i].id, students[i].name, students[i].programme, students[i].mark);
+            if (!found) printf("Record(s) Found:\n%-10s %-22s %-26s %-8s\n", "ID", "Name", "Programme", "Mark");
+            printf("%-10d %-22s %-26s %-8.2f\n", students[i].id, students[i].name, students[i].programme, students[i].mark);
             found = 1;
         }
     }
-    if (!found) {
-        printf("Warning: No record found with student name \"%s\".\n", queryName);
-    }
+    if (!found) { printf("Warning: No record found with student name \"%s\".\n", queryName); }
 }
 
-void queryStudentByProgramme(Student students[], int student_count) {
-    char queryProg[PROGRAMME_LENGTH];
+void queryStudentByProgramme(Student students[], int student_count, const char* queryProg) {
     int found = 0;
-    printf("Enter the programme to search: ");
-    fgets(queryProg, sizeof(queryProg), stdin);
-    queryProg[strcspn(queryProg, "\n")] = 0;
-
     for (int i = 0; i < student_count; i++) {
         if (strcasecmp(students[i].programme, queryProg) == 0) {
-            if (!found) {
-                printf("Record(s) Found:\n");
-                printf("%-10s %-22s %-26s %-8s\n", "ID", "Name", "Programme", "Mark");
-            }
-            printf("%-10d %-22s %-26s %-8.2f\n",
-                students[i].id, students[i].name, students[i].programme, students[i].mark);
+            if (!found) printf("Record(s) Found:\n%-10s %-22s %-26s %-8s\n", "ID", "Name", "Programme", "Mark");
+            printf("%-10d %-22s %-26s %-8.2f\n", students[i].id, students[i].name, students[i].programme, students[i].mark);
             found = 1;
         }
     }
-    if (!found) {
-        printf("Warning: No record found with programme \"%s\".\n", queryProg);
-    }
+    if (!found) { printf("Warning: No record found with programme \"%s\".\n", queryProg); }
 }
 
-void queryStudentByGrade(Student students[], int student_count) {
-    char gradeInput[4];
-    float minScore, maxScore;
-    int found = 0;
-    printf("Enter the grade to search (e.g. A, B+, C-): ");
-    fgets(gradeInput, sizeof(gradeInput), stdin);
-    gradeInput[strcspn(gradeInput, "\n")] = 0;
-    for (int i = 0; gradeInput[i]; i++) gradeInput[i] = toupper((unsigned char)gradeInput[i]);
-
-    gradeRange(gradeInput, &minScore, &maxScore);
-    if (minScore < 0) {
-        printf("Invalid grade entered.\n");
-        return;
-    }
-
+void queryStudentByGrade(Student students[], int student_count, const char* gradeInput) {
+    float minScore, maxScore; int found = 0;
+    char grade[4]; strncpy(grade, gradeInput, 3); grade[3] = '\0';
+    for (int i = 0; grade[i]; i++) grade[i] = toupper((unsigned char)grade[i]);
+    gradeRange(grade, &minScore, &maxScore);
+    if (minScore < 0) { printf("Invalid grade entered.\n"); return; }
     for (int i = 0; i < student_count; i++) {
         if (students[i].mark >= minScore && students[i].mark <= maxScore) {
-            if (!found) {
-                printf("Record(s) Found:\n");
-                printf("%-10s %-22s %-26s %-8s\n", "ID", "Name", "Programme", "Mark");
-            }
-            printf("%-10d %-22s %-26s %-8.2f\n",
-                   students[i].id, students[i].name, students[i].programme, students[i].mark);
+            if (!found) printf("Record(s) Found:\n%-10s %-22s %-26s %-8s\n", "ID", "Name", "Programme", "Mark");
+            printf("%-10d %-22s %-26s %-8.2f\n", students[i].id, students[i].name, students[i].programme, students[i].mark);
             found = 1;
         }
     }
-    if (!found) {
-        printf("Warning: No record found for grade %s.\n", gradeInput);
-    }
+    if (!found) { printf("Warning: No record found for grade %s.\n", gradeInput); }
 }
