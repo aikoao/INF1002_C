@@ -3,7 +3,6 @@
 #include <ctype.h>
 #include "database.h"
 #include "query.h"  
-#include "insert.h"
 
 void trim(char *str){
     int start = 0; // remove the whitespaces

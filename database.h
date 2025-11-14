@@ -31,6 +31,8 @@ void sort_by_programme_desc(void);
 
 // Command functions (Team)
 void update_record(const char *command);      // Aiko
+//void query_record();       // Andrew  
+void insert_record(const char *command);      // Xin Huei
 void delete_record(const char* command);      // Damien
 void show_help(void);                     // Help menu
 
