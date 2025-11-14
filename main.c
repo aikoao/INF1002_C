@@ -61,6 +61,8 @@ int main() {
         printf("P4_8: ");
         fgets(userinput, sizeof(userinput), stdin);
         userinput[strlen(userinput)-1] = '\0';
+
+        trim(userinput);
     
         strcpy(original_input, userinput);  // STORE ORIGINAL BEFORE CONVERSION
     
