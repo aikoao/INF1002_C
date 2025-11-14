@@ -3,6 +3,32 @@
 #include <ctype.h>
 #include "query.h"
 
+void trimSpaces(char *str) {
+    // Remove starting spaces
+    int start = 0;
+    while (isspace((unsigned char)str[start])) start++;
+    if (start > 0) memmove(str, str + start, strlen(str + start) + 1);
+    // Remove trailing spaces
+    int len = strlen(str);
+    while (len > 0 && isspace((unsigned char)str[len - 1])) {
+        str[len - 1] = '\0';
+        len--;
+    }
+}
+void reduceInnerSpaces(char *str) {
+    int i = 0, j = 0, in_space = 0;
+    while (str[i]) {
+        if (isspace((unsigned char)str[i])) {
+            if (!in_space) { str[j++] = ' '; in_space = 1; }
+        } else {
+            str[j++] = str[i];
+            in_space = 0;
+        }
+        i++;
+    }
+    str[j] = '\0';
+}
+
 
 void gradeRange(const char *grade, float *min, float *max) {
     if (strcmp(grade, "A+") == 0) {*min = 85; *max = 100;}
@@ -46,12 +72,23 @@ void query_process(const char* input, Student students[], int student_count) {
 }
 
 void queryStudentByID(Student students[], int student_count, const char* idInput) {
-    int len = strlen(idInput), valid = 1, queryId, found = 0;
-    if (len != 7) valid = 0;
-    for (int i = 0; i < len && valid; i++)
-        if (!isdigit((unsigned char)idInput[i])) valid = 0;
-    if (!valid) { printf("Please input a proper ID (2xxxxxx)\n"); return; }
-    sscanf(idInput, "%d", &queryId);
+    char id[16];
+    strncpy(id, idInput, 15);
+    id[15] = '\0';
+    trimSpaces(id);          // Trim spaces on id copy
+
+    int len = strlen(id), valid = 1, queryId, found = 0;
+    if (len != 7) valid = 0;   // Validate length of trimmed string
+    for (int i = 0; i < len && valid; i++) {
+        if (!isdigit((unsigned char)id[i])) valid = 0;  // Validate digits in trimmed string
+    }
+    if (!valid) {
+        printf("Please input a proper ID (2xxxxxx)\n");
+        return;
+    }
+
+    sscanf(id, "%d", &queryId);  // Parse from trimmed string
+
     for (int i = 0; i < student_count; i++) {
         if (students[i].id == queryId) {
             printf("Record Found:\n%-10s %-22s %-26s %-8s\n", "ID", "Name", "Programme", "Mark");
@@ -60,10 +97,18 @@ void queryStudentByID(Student students[], int student_count, const char* idInput
             break;
         }
     }
-    if (!found) { printf("Warning: No record found with student ID %d.\n", queryId); }
+    if (!found) {
+        printf("Warning: No record found with student ID %d.\n", queryId);
+    }
 }
 
-void queryStudentByName(Student students[], int student_count, const char* queryName) {
+
+void queryStudentByName(Student students[], int student_count, const char* queryNameInput) {
+    char queryName[NAME_LENGTH];
+    strncpy(queryName, queryNameInput, NAME_LENGTH-1);
+    queryName[NAME_LENGTH-1] = '\0';
+    trimSpaces(queryName);
+    reduceInnerSpaces(queryName);
     int found = 0;
     for (int i = 0; i < student_count; i++) {
         if (strcasecmp(students[i].name, queryName) == 0) {
@@ -75,7 +120,12 @@ void queryStudentByName(Student students[], int student_count, const char* query
     if (!found) { printf("Warning: No record found with student name \"%s\".\n", queryName); }
 }
 
-void queryStudentByProgramme(Student students[], int student_count, const char* queryProg) {
+void queryStudentByProgramme(Student students[], int student_count, const char* queryProgInput) {
+    char queryProg[PROGRAMME_LENGTH];
+    strncpy(queryProg, queryProgInput, PROGRAMME_LENGTH-1);
+    queryProg[PROGRAMME_LENGTH-1] = '\0';
+    trimSpaces(queryProg);
+    reduceInnerSpaces(queryProg);
     int found = 0;
     for (int i = 0; i < student_count; i++) {
         if (strcasecmp(students[i].programme, queryProg) == 0) {
@@ -87,7 +137,13 @@ void queryStudentByProgramme(Student students[], int student_count, const char* 
     if (!found) { printf("Warning: No record found with programme \"%s\".\n", queryProg); }
 }
 
-void queryStudentByGrade(Student students[], int student_count, const char* gradeInput) {
+void queryStudentByGrade(Student students[], int student_count, const char* gradeInputHold) {
+    char gradeInput[4];
+    strncpy(gradeInput, gradeInputHold, 3);
+    gradeInput[3] = '\0';
+    trimSpaces(gradeInput);
+
+    for (int i = 0; gradeInput[i]; i++) gradeInput[i] = toupper((unsigned char)gradeInput[i]);
     float minScore, maxScore; int found = 0;
     char grade[4]; strncpy(grade, gradeInput, 3); grade[3] = '\0';
     for (int i = 0; grade[i]; i++) grade[i] = toupper((unsigned char)grade[i]);
