@@ -13,9 +13,9 @@ void gradeRange(const char *grade, float *min, float *max) {
     else if (strcmp(grade, "B-") == 0) {*min = 60; *max = 64;}
     else if (strcmp(grade, "C+") == 0) {*min = 55; *max = 59;}
     else if (strcmp(grade, "C") == 0) {*min = 50; *max = 54;}
-    else if (strcmp(grade, "D+") == 0) {*min = 50; *max = 54;}  // D+, D, C all have same range in your table
-    else if (strcmp(grade, "D") == 0) {*min = 50; *max = 54;}
-    else if (strcmp(grade, "F") == 0) {*min = 0; *max = 49;}
+    else if (strcmp(grade, "D+") == 0) {*min = 45; *max = 49;}  // D+, D, C all have same range in your table
+    else if (strcmp(grade, "D") == 0) {*min = 40; *max = 44;}
+    else if (strcmp(grade, "F") == 0) {*min = 0; *max = 39;}
     else {*min = -1; *max = -1;}
 }
 
