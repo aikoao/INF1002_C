@@ -3,7 +3,6 @@
 #include <ctype.h>
 #include "database.h"
 #include "query.h"  
-#include "insert.h"
 
 int main() {
     // display declaration 
