@@ -46,15 +46,11 @@ int main() {
         for(int i=0; userinput[i]; i++) 
             userinput[i] = toupper(userinput[i]);
 
-        sscanf(userinput, "%s %s", command, filename);
+        sscanf(userinput, "%s", command);
         
         // Handle features
         if(strcmp(command, "OPEN") == 0) {
-            if(strlen(filename) == 0 || filename[0] == '\0'){
-                printf("CMS: Please specify the database file name!\n");
-            } else {
-                openDatabase(filename);
-            }
+            openDatabase();
         }
         else if(strcmp(userinput, "SHOW ALL SORT BY ID (ASCENDING)") == 0) {
             if(student_count == 0){

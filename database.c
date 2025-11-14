@@ -8,13 +8,13 @@
 Student students[MAX_RECORDS];
 int student_count = 0;
 
-void openDatabase(char *filename) {
-    FILE *file = fopen(filename, "r");
+void openDatabase(void) {
+    FILE *file = fopen("P4_8-CMS.TXT", "r");
     char buffer[300]; // temporary storage for each line
     char temp_prog[PROGRAMME_LENGTH]; // temporary storage for programme and mark
 
     if(file == NULL){
-        printf("CMS: Error, the database file \"%s\" cannot be found!\n", filename);
+        printf("CMS: Error, the database file \"P4_8-CMS.TXT\" cannot be found!\n");
         return;
     }
 
@@ -43,7 +43,7 @@ void openDatabase(char *filename) {
     }
     
     fclose(file);
-    printf("CMS: The database file \"%s\" is successfully opened.\n", filename);
+    printf("CMS: The database file \"P4_8-CMS.TXT\" is successfully opened.\n");
     
 }
 

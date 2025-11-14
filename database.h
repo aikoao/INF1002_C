@@ -17,7 +17,7 @@ extern Student students[MAX_RECORDS]; // global array to store the student recor
 extern int student_count; // global variable to mark the current number of students 
 
 // File operations 
-void openDatabase(char *filename);
+void openDatabase(void);
 void showAll(void);
 void saveDatabase();
 void sort_by_id_asc(void);

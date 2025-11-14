@@ -1,18 +1,18 @@
-2001000 (Abishek Tan) Electrial Engineering 45.50
-2201234 (Isaac Teo) Computer Science 63.40
-2206002 (Nicholas Tan) Applied Computing 68.80
-2207110 (Wei Jie Foo) Computer Science 87.90
-2301234 (Andrew Gan) Electrical Engineering 20.00
-2304509 (Daniel Lim) Electrical Engineering 54.00
-2304567 (John Levoy) Digital Supply Chain 85.90
-2305897 (Rachel Ong) Business Analytics 65.40
 2402136 (Alice Tan) Applied Computing 100.00
-2403120 (Siti Nurhaliza) Digital Supply Chain 72.60
-2409458 (Jeremy Yeo) Digital Supply Chain 89.90
-2500837 (Damien Teh) Applied Computing 88.60
 2501122 (Zhang Zheng Cheng) Applied Computing 99.20
 2501256 (Emily Tan) Computer Science 91.30
-2501982 (Marcus Lee) Applied Computing 78.50
+2409458 (Jeremy Yeo) Digital Supply Chain 89.90
+2500837 (Damien Teh) Applied Computing 88.60
+2207110 (Wei Jie Foo) Computer Science 87.90
+2304567 (John Levoy) Digital Supply Chain 85.90
 2502312 (Chloe Ng) Business Analytics 83.00
+2501982 (Marcus Lee) Applied Computing 78.50
+2403120 (Siti Nurhaliza) Digital Supply Chain 72.60
+2206002 (Nicholas Tan) Applied Computing 68.80
+2305897 (Rachel Ong) Business Analytics 65.40
+2201234 (Isaac Teo) Computer Science 63.40
 2508324 (Nurul Huda) Applied Computing 61.75
-2000222 (Vin Diesal) Business Computing 80.21
+2304509 (Daniel Lim) Electrical Engineering 54.00
+2001000 (Abishek Tan) Electrial Engineering 45.50
+2000222 (Paul Walker) Business Analytics 23.50
+2301234 (Andrew Gan) Electrical Engineering 20.00
