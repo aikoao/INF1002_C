@@ -32,13 +32,17 @@ int main() {
     
     while(1) {
         char userinput[256];
+        char original_input[256];
         char command[50];
         char filename[100] = "";
+
         printf("P4_8: ");
         fgets(userinput, sizeof(userinput), stdin);
         userinput[strlen(userinput)-1] = '\0';
-        
-        // Convert to uppercase
+    
+        strcpy(original_input, userinput);  // STORE ORIGINAL BEFORE CONVERSION
+    
+        // Then do your uppercase conversion
         for(int i=0; userinput[i]; i++) 
             userinput[i] = toupper(userinput[i]);
 
@@ -96,8 +100,10 @@ int main() {
                 showAll();
             }
         }
+        // With this:
         else if(strstr(userinput, "UPDATE") != NULL) {
-            update_record(userinput);
+            // Use original_input for UPDATE to preserve case in values
+            update_record(original_input);
         }
         else if (strcmp(userinput, "QUERY ID") == 0) {
             queryStudentByID(students, student_count);
