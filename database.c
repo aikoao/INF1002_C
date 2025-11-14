@@ -9,6 +9,8 @@ Student students[MAX_RECORDS];
 int student_count = 0;
 
 void openDatabase(void) {
+    student_count = 0;
+    
     FILE *file = fopen("P4_8-CMS.TXT", "r");
     char buffer[300]; // temporary storage for each line
     char temp_prog[PROGRAMME_LENGTH]; // temporary storage for programme and mark
@@ -125,3 +127,50 @@ void sort_by_mark_desc(void) { // sort by mark descending order
     }
 }
 
+void sort_by_name_asc (void) { // sort by name ascending order
+    for (int i = 0; i < student_count; i++){
+        for(int j = 0; j < student_count - i - 1; j++){
+            if(strcmp(students[j].name, students[j + 1].name) > 0){ // compare Name
+                Student temp = students[j]; // swap 
+                students[j] = students[j + 1];
+                students[j + 1] = temp;
+            }
+        }
+    }
+}
+
+void sort_by_name_desc (void) { // sort by name descending order
+    for (int i = 0; i < student_count; i++){
+        for(int j = 0; j < student_count - i - 1; j++){
+            if(strcmp(students[j].name, students[j + 1].name) < 0){ // compare Name
+                Student temp = students[j]; // swap 
+                students[j] = students[j + 1];
+                students[j + 1] = temp;
+            }
+        }
+    }
+}
+
+void sort_by_programme_asc (void) { // sort by programme ascending order
+    for (int i = 0; i < student_count; i++){
+        for(int j = 0; j < student_count - i - 1; j++){
+            if(strcmp(students[j].programme, students[j + 1].programme) > 0){ // compare Programme
+                Student temp = students[j]; // swap 
+                students[j] = students[j + 1];
+                students[j + 1] = temp;
+            }
+        }
+    }
+}
+
+void sort_by_programme_desc (void) { // sort by programme ascending order
+    for (int i = 0; i < student_count; i++){
+        for(int j = 0; j < student_count - i - 1; j++){
+            if(strcmp(students[j].programme, students[j + 1].programme) < 0){ // compare Programme
+                Student temp = students[j]; // swap 
+                students[j] = students[j + 1];
+                students[j + 1] = temp;
+            }
+        }
+    }
+}

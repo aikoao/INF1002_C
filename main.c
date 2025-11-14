@@ -5,6 +5,28 @@
 #include "query.h"  
 #include "insert.h"
 
+void trim(char *str){
+    int start = 0; // remove the whitespaces
+    while(str[start] == ' ' || str[start] == '\t'){
+        start++;
+    }
+
+    if(start > 0){ // shift the string to remove the whitespaces
+        int i = 0; 
+        while(str[start] != '\0'){
+            str[i] = str[start];
+            i++;
+            start++;
+        } str[i] = '\0';
+    }
+
+    int end = strlen(str) - 1; // remove trailing whitespaces
+    while(end >= 0 && (str[end] == ' ' || str[end] == '\t')){
+        str[end] = '\0';
+        end--;
+    }
+}
+
 int main() {
     // display declaration 
     printf("--Declaration--\n");
@@ -32,63 +54,53 @@ int main() {
     
     while(1) {
         char userinput[256];
-        char command[50];
-        char filename[100] = "";
         printf("P4_8: ");
         fgets(userinput, sizeof(userinput), stdin);
         userinput[strlen(userinput)-1] = '\0';
+
+        trim(userinput);
         
         // Convert to uppercase
         for(int i=0; userinput[i]; i++) 
             userinput[i] = toupper(userinput[i]);
-
-        sscanf(userinput, "%s", command);
         
         // Handle features
-        if(strcmp(command, "OPEN") == 0) {
+        if(strcmp(userinput, "OPEN") == 0) {
             openDatabase();
         }
-        else if(strcmp(userinput, "SHOW ALL SORT BY ID (ASCENDING)") == 0) {
+        else if(strstr(userinput, "SHOW ALL") != 0) {
             if(student_count == 0){
                 printf("CMS: Error, no records found! Please open the database file first.\n");
             } else {
                 printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
-                sort_by_id_asc();
-                showAll();  
-            }
-        }
-        else if(strcmp(userinput, "SHOW ALL SORT BY MARK (ASCENDING)") == 0) {
-            if(student_count == 0){
-                printf("CMS: Error, no records found! Please open the database file first.\n");
-            } else {
-                printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
-                sort_by_mark_asc();
-                showAll();
-            }
-        }
-        else if(strcmp(userinput, "SHOW ALL SORT BY ID (DESCENDING)") == 0) {
-            if(student_count == 0){
-                printf("CMS: Error, no records found! Please open the database file first.\n");
-            } else {
-                printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
-                sort_by_id_desc();
-                showAll();  
-            }
-        }
-        else if(strcmp(userinput, "SHOW ALL SORT BY MARK (DESCENDING)") == 0) {
-            if(student_count == 0){
-                printf("CMS: Error, no records found! Please open the database file first.\n");
-            } else {
-                printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
-                sort_by_mark_desc();
-                showAll();
-            }
-        }
-        else if(strcmp(userinput, "SHOW ALL") == 0) {
-            if(student_count == 0){
-                printf("CMS: Error, no records found! Please open the database file first.\n");
-            } else {
-                printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
+
+                if(strcmp(userinput, "SHOW ALL") == 0){
+                }
+                else if(strcmp(userinput, "SHOW ALL SORT BY ID (ASCENDING)") == 0){
+                    sort_by_id_asc();
+                }
+                else if(strcmp(userinput, "SHOW ALL SORT BY ID (DESCENDING)") == 0){
+                    sort_by_id_desc();
+                }
+                else if(strcmp(userinput, "SHOW ALL SORT BY MARK (ASCENDING)") == 0){
+                    sort_by_mark_asc();
+                }
+                else if(strcmp(userinput, "SHOW ALL SORT BY MARK (DESCENDING)") == 0){
+                    sort_by_mark_desc();
+                }
+                else if(strcmp(userinput, "SHOW ALL SORT BY NAME (ASCENDING)") == 0){
+                    sort_by_name_asc();
+                }
+                else if(strcmp(userinput, "SHOW ALL SORT BY NAME (DESCENDING)") == 0){
+                    sort_by_name_desc();
+                }
+                else if(strcmp(userinput, "SHOW ALL SORT BY PROGRAMME (ASCENDING)") == 0){
+                    sort_by_programme_asc();
+                }
+                else if(strcmp(userinput, "SHOW ALL SORT BY PROGRAMME (DESCENDING)") == 0){
+                    sort_by_programme_desc();
+                }
+                
                 showAll();
             }
         }

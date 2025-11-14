@@ -24,11 +24,13 @@ void sort_by_id_asc(void);
 void sort_by_mark_asc(void);
 void sort_by_id_desc(void);
 void sort_by_mark_desc(void);
+void sort_by_name_asc(void);
+void sort_by_name_desc(void);
+void sort_by_programme_asc(void);
+void sort_by_programme_desc(void);
 
 // Command functions (Team)
 void update_record(const char *command);      // Aiko
-//void query_record();       // Andrew  
-//void insert_record();      // Xin Huei
 void delete_record(const char* command);      // Damien
 void show_help(void);                     // Help menu
 
