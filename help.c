@@ -6,7 +6,7 @@ void show_help(void) {
     printf("         CMS HELP MENU (P4_8 SYSTEM)\n");
     printf("=============================================\n");
     printf("Available Commands:\n");
-    printf("  OPEN [Database filename]              - Open the student database file.\n");
+    printf("  OPEN                                  - Open the student database file.\n");
     printf("  SHOW ALL                              - Display all student records.\n");
     printf("  SHOW ALL SORT BY ID (ASCENDING)       - Display all records sorted by ID in ascending order.\n");
     printf("  SHOW ALL SORT BY MARK (ASCENDING)     - Display all records sorted by mark in ascending order.\n");
