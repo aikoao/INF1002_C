@@ -2,16 +2,17 @@
 #include <string.h>
 #include <ctype.h>
 #include "database.h"
-#include "query.h"  
+#include "query.h"
+#include "autocorrect.h"
 
 void trim(char *str){
-    int start = 0; // remove the whitespaces
+    int start = 0;
     while(str[start] == ' ' || str[start] == '\t'){
         start++;
     }
 
-    if(start > 0){ // shift the string to remove the whitespaces
-        int i = 0; 
+    if(start > 0){
+        int i = 0;
         while(str[start] != '\0'){
             str[i] = str[start];
             i++;
@@ -19,7 +20,7 @@ void trim(char *str){
         } str[i] = '\0';
     }
 
-    int end = strlen(str) - 1; // remove trailing whitespaces
+    int end = strlen(str) - 1;
     while(end >= 0 && (str[end] == ' ' || str[end] == '\t')){
         str[end] = '\0';
         end--;
@@ -27,7 +28,6 @@ void trim(char *str){
 }
 
 int main() {
-    // display declaration 
     printf("--Declaration--\n");
     printf("SIT's policy on copying does not allow the students to copy source code as well as assesment solutions from another person AI or other places. ");
     printf("It is the students' responsibility to guarantee that their assessment solutions are their own work. ");
@@ -47,10 +47,8 @@ int main() {
     printf(" 3. Chong Xinhuei\n");
     printf(" 4. Damien Teh\n");
     printf(" 5. Happy Calista\n");
-    printf("Date: \n");
-    printf("\n");
-    
-    
+    printf("Date: \n\n");
+
     while(1) {
         char userinput[256];
         char original_input[256];
@@ -62,14 +60,22 @@ int main() {
         userinput[strlen(userinput)-1] = '\0';
 
         trim(userinput);
-    
-        strcpy(original_input, userinput);  // STORE ORIGINAL BEFORE CONVERSION
-    
-        // Then do your uppercase conversion
-        for(int i=0; userinput[i]; i++) 
+        strcpy(original_input, userinput);
+
+        char *suggestion = autocorrect_command_prompt(userinput);
+        if (suggestion != NULL && strcmp(suggestion, userinput) != 0) {
+            char answer[10];
+            printf("CMS: Did you mean '%s'? (Y/N): ", suggestion);
+            fgets(answer, sizeof(answer), stdin);
+            if (toupper(answer[0]) == 'Y') {
+                strcpy(userinput, suggestion);
+                strcpy(original_input, suggestion);
+            }
+        }
+
+        for(int i=0; userinput[i]; i++)
             userinput[i] = toupper(userinput[i]);
-        
-        // Handle features
+
         if(strcmp(userinput, "OPEN") == 0) {
             openDatabase();
         }
@@ -105,13 +111,11 @@ int main() {
                 else if(strcmp(userinput, "SHOW ALL SORT BY PROGRAMME (DESCENDING)") == 0){
                     sort_by_programme_desc();
                 }
-                
+
                 showAll();
             }
         }
-        // With this:
         else if(strstr(userinput, "UPDATE") != NULL) {
-            // Use original_input for UPDATE to preserve case in values
             update_record(original_input);
         }
         else if (strstr(userinput, "QUERY") != NULL) {
@@ -121,9 +125,9 @@ int main() {
             insert_record(userinput);
         }
         else if(strstr(userinput, "DELETE") != NULL) {
-            delete_record(userinput); 
+            delete_record(userinput);
         }
-        else if (strcmp(userinput, "HELP") == 0) {
+        else if(strcmp(userinput, "HELP") == 0) {
             show_help();
         }
         else if(strcmp(userinput, "SAVE") == 0) {
