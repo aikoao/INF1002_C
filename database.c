@@ -103,6 +103,30 @@ void sort_by_mark_asc(void) { // sort by mark ascending order
     }
 }
 
+void sort_by_name_asc (void) { // sort by name ascending order
+    for (int i = 0; i < student_count; i++){
+        for(int j = 0; j < student_count - i - 1; j++){
+            if(strcmp(students[j].name, students[j + 1].name) > 0){ // compare Names
+                Student temp = students[j]; // swap 
+                students[j] = students[j + 1];
+                students[j + 1] = temp;
+            }
+        }
+    }
+}
+
+void sort_by_programme_asc (void) { // sort by programme ascending order
+    for (int i = 0; i < student_count; i++){
+        for(int j = 0; j < student_count - i - 1; j++){
+            if(strcmp(students[j].programme, students[j + 1].programme) > 0){ // compare Programmes
+                Student temp = students[j]; // swap 
+                students[j] = students[j + 1];
+                students[j + 1] = temp;
+            }
+        }
+    }
+}
+
 void sort_by_id_desc(void) { // sort by id descending order 
     for(int i = 0; i < student_count - 1; i++){
         for(int j = 0; j < student_count - i - 1; j++){
@@ -127,22 +151,12 @@ void sort_by_mark_desc(void) { // sort by mark descending order
     }
 }
 
-void sort_by_name_asc (void) { // sort by name ascending order
-    for (int i = 0; i < student_count; i++){
-        for(int j = 0; j < student_count - i - 1; j++){
-            if(strcmp(students[j].name, students[j + 1].name) > 0){ // compare Name
-                Student temp = students[j]; // swap 
-                students[j] = students[j + 1];
-                students[j + 1] = temp;
-            }
-        }
-    }
-}
+
 
 void sort_by_name_desc (void) { // sort by name descending order
     for (int i = 0; i < student_count; i++){
         for(int j = 0; j < student_count - i - 1; j++){
-            if(strcmp(students[j].name, students[j + 1].name) < 0){ // compare Name
+            if(strcmp(students[j].name, students[j + 1].name) < 0){ // compare Names
                 Student temp = students[j]; // swap 
                 students[j] = students[j + 1];
                 students[j + 1] = temp;
@@ -151,22 +165,10 @@ void sort_by_name_desc (void) { // sort by name descending order
     }
 }
 
-void sort_by_programme_asc (void) { // sort by programme ascending order
+void sort_by_programme_desc (void) { // sort by programme descending order
     for (int i = 0; i < student_count; i++){
         for(int j = 0; j < student_count - i - 1; j++){
-            if(strcmp(students[j].programme, students[j + 1].programme) > 0){ // compare Programme
-                Student temp = students[j]; // swap 
-                students[j] = students[j + 1];
-                students[j + 1] = temp;
-            }
-        }
-    }
-}
-
-void sort_by_programme_desc (void) { // sort by programme ascending order
-    for (int i = 0; i < student_count; i++){
-        for(int j = 0; j < student_count - i - 1; j++){
-            if(strcmp(students[j].programme, students[j + 1].programme) < 0){ // compare Programme
+            if(strcmp(students[j].programme, students[j + 1].programme) < 0){ // compare Programmes
                 Student temp = students[j]; // swap 
                 students[j] = students[j + 1];
                 students[j + 1] = temp;
