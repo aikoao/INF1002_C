@@ -133,6 +133,13 @@ int main() {
                 }
             }
         }
+        else if (strcmp(userinput, "SHOW SUMMARY") == 0) {
+            if (student_count == 0) {
+                printf("CMS: Error, no records found! Please open the database file first.\n");
+            } else {
+                show_summary();
+            }
+        }
         else if(strstr(userinput, "UPDATE") != NULL) {
             update_record(original_input);
         }

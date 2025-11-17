@@ -176,3 +176,58 @@ void sort_by_programme_desc (void) { // sort by programme descending order
         }
     }
 }
+
+
+void show_summary(void) {
+    if (student_count == 0) {
+        printf("CMS: Error, no records found! Please open the database file first.\n");
+        return;
+    }
+
+    int total = student_count;
+    float sum = 0.0f;
+    float highest = students[0].mark;
+    float lowest  = students[0].mark;
+
+    // Compute sum, highest, lowest
+    for (int i = 0; i < student_count; i++) {
+        float m = students[i].mark;
+        sum += m;
+        if (m > highest) highest = m;
+        if (m < lowest)  lowest  = m;
+    }
+
+    float average = sum / total;
+
+    printf("CMS: Summary of the table \"StudentRecords\".\n");
+    printf("Total number of students : %d\n", total);
+    printf("Average mark             : %.2f\n", average);
+
+    // Highest mark students
+    printf("Highest mark             : %.2f\n", highest);
+    printf("Student(s) with highest mark:\n");
+    printf("%-10s %-22s %-26s %-8s\n", "ID", "Name", "Programme", "Mark");
+    for (int i = 0; i < student_count; i++) {
+        if (students[i].mark == highest) {
+            printf("%-10d %-22s %-26s %-8.2f\n",
+                students[i].id,
+                students[i].name,
+                students[i].programme,
+                students[i].mark);
+        }
+    }
+
+    // Lowest mark students
+    printf("Lowest mark              : %.2f\n", lowest);
+    printf("Student(s) with lowest mark:\n");
+    printf("%-10s %-22s %-26s %-8s\n", "ID", "Name", "Programme", "Mark");
+    for (int i = 0; i < student_count; i++) {
+        if (students[i].mark == lowest) {
+            printf("%-10d %-22s %-26s %-8.2f\n",
+                students[i].id,
+                students[i].name,
+                students[i].programme,
+                students[i].mark);
+        }
+    }
+}
