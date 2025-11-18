@@ -162,6 +162,13 @@ int main() {
                 saveDatabase();
             }
         }
+        else if(strcmp(userinput, "UNDO") == 0) {
+            if (student_count == 0) {
+                printf("CMS: No records loaded. Please open the database file first.\n");
+            } else {
+                undo_last_command();
+            }
+        }
         else if(strcmp(userinput, "EXIT") == 0) {
             break;
         }

@@ -32,6 +32,11 @@ void delete_record(const char* command) {
         return;
     }
 
+    // Save undo state BEFORE deletion
+    char description[50];
+    snprintf(description, sizeof(description), "DELETE ID=%d", id);
+    save_undo_state(description);
+
     // Confirmation
     printf("CMS: Are you sure you want to delete record with ID=%d? Type \"Y\" to confirm or type \"N\" to cancel.\n", id);
     printf("P4_8: ");

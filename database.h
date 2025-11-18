@@ -4,6 +4,7 @@
 #define MAX_RECORDS 200
 #define NAME_LENGTH 50
 #define PROGRAMME_LENGTH 100
+#define UNDO_STACK_SIZE 3 // number of undo user has
 
 // Define the structure for student records
 typedef struct {
@@ -13,8 +14,17 @@ typedef struct {
     float mark;
 }Student;
 
+typedef struct {
+    Student students[MAX_RECORDS];
+    int student_count;
+    char description[100];
+} UndoState;
+
 extern Student students[MAX_RECORDS]; // global array to store the student records
 extern int student_count; // global variable to mark the current number of students 
+
+extern UndoState undo_stack[UNDO_STACK_SIZE];
+extern int undo_top;
 
 // File operations 
 void openDatabase(void);
@@ -37,5 +47,9 @@ void show_summary(void);
 void delete_record(const char* command);      // Damien
 void show_help(void);                     // Help menu
 
+// Undo functions
+void save_undo_state(const char *description);
+void undo_last_command(void);
+void clear_undo_history(void);
 
 #endif // end of the DATABASE_H

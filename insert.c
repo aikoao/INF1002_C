@@ -163,6 +163,9 @@ static int find_index_by_id(int id){
 
 // ---------- main insert logic ----------
 void insert_record(const char *command){
+    // Save state BEFORE making changes
+    save_undo_state("INSERT operation");
+
     if(!command){
         printf("CMS: Invalid command. Use: INSERT ID=... Name=... Programme=... Mark=...\n");
         return;

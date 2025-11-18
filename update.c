@@ -21,6 +21,9 @@ void auto_capitalise(char *str) {
 }
 
 void update_record(const char *command) {
+    // Save state BEFORE making changes
+    save_undo_state("UPDATE operation");
+    
     // Convert entire command to uppercase for case-insensitive checking
     char upper_cmd[256];
     strcpy(upper_cmd, command);

@@ -10,6 +10,9 @@ int student_count = 0;
 
 void openDatabase(void) {
     student_count = 0;
+
+    // clear undo history when opening a new file
+    clear_undo_history();
     
     FILE *file = fopen("P4_8-CMS.TXT", "r");
     char buffer[300]; // temporary storage for each line
@@ -76,6 +79,10 @@ void saveDatabase(void) {
     }
 
     fclose(file);
+
+    // clear undo history after save
+    clear_undo_history();
+
     printf("CMS: The database file \"P4_8-CMS.txt\" is successfully saved.\n");
 }
 
