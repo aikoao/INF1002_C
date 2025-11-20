@@ -19,7 +19,7 @@ void show_help(void) {
     printf("  INSERT                                    - Add a new student record.\n");
     printf("  UPDATE ID=<number>                        - Update an existing student's info.\n");
     printf("  DELETE ID=<number>                        - Delete a student record by ID.\n");
-    printf("  QUERY                                     - Search for records (by ID/name/programme/grade.).\n");
+    printf("  QUERY ID/NAME/PROGRAMME/GRADE=<>          - Search for records (by ID/name/programme/grade.).\n");
     printf("  UNDO                                      - Undo last operation (up to 3 steps\n");
     printf("  SAVE                                      - Save all changes to the database file.\n");
     printf("  HELP                                      - Display this help menu.\n");
