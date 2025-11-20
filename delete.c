@@ -7,18 +7,41 @@
 void delete_record(const char* command) {
     int id = -1;
 
-    char upper[50];
+    // Convert command to uppercase for command checking
+    char upper[100];
     strcpy(upper, command);
     for (int i = 0; upper[i]; i++)
         upper[i] = toupper(upper[i]);
 
+    // Check correct starting format
     if (strncmp(upper, "DELETE ID=", 10) != 0) {
         printf("CMS: Wrong delete format. Use: DELETE ID=xxxxxxx\n");
         return;
     }
 
-    id = atoi(command + 10);
+    const char* id_str = command + 10; // Extract part after DELETE ID=
 
+    // Trim whitespace
+    while (*id_str == ' ') id_str++;
+
+    // 1. Length check (exactly 7 digits)
+    if (strlen(id_str) != 7) {
+        printf("CMS: Invalid ID. Must be exactly 7 digits.\n");
+        return;
+    }
+
+    // 2. Digit check
+    for (int i = 0; i < 7; i++) {
+        if (!isdigit(id_str[i])) {
+            printf("CMS: ID must contain only digits.\n");
+            return;
+        }
+    }
+
+    // Safe to convert
+    id = atoi(id_str);
+
+    // Find matching record
     int index = -1;
     for (int i = 0; i < student_count; i++) {
         if (students[i].id == id) {
@@ -60,4 +83,3 @@ void delete_record(const char* command) {
 
     printf("CMS: The record with ID=%d is successfully deleted.\n", id);
 }
-
