@@ -46,8 +46,8 @@ int main() {
     printf(" 2. Aiko Mendoza Tan\n");
     printf(" 3. Chong Xinhuei\n");
     printf(" 4. Damien Teh\n");
-    printf(" 5. Happy Calista\n");
-    printf("Date: \n\n");
+    printf(" 5. Happy Calista\n\n");
+    printf("Date: 23 November 2025\n\n");
 
     while(1) {
         char userinput[256];
