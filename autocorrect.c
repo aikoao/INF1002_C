@@ -44,41 +44,58 @@ int string_distance(const char *a, const char *b) {
     return dist;
 }
 
-// Autocorrect: finds the closest command prefix and preserves parameters
 char* autocorrect_command(const char *input) {
     if (!input || strlen(input) == 0) return NULL;
 
     const char *best = NULL;
     int best_dist = 1000;
-    int best_len = 0;
 
-    // Compare input to all commands and pick the closest match
+    // Loop through all commands
     for (int i = 0; i < NUM_COMMANDS; i++) {
-        int cmd_len = strlen(commands[i]);
-        int len_to_compare = strlen(input) < cmd_len ? strlen(input) : cmd_len;
+        int len = strlen(commands[i]);
+        int compare_len = len < strlen(input) ? len : strlen(input);
 
-        int dist = string_distance(input, commands[i]);
-        if (dist < best_dist) {
-            best_dist = dist;
+        char command_prefix[100];
+        strncpy(command_prefix, commands[i], compare_len);
+        command_prefix[compare_len] = '\0';
+
+        int d = string_distance(input, command_prefix);
+        if (d < best_dist) {
+            best_dist = d;
             best = commands[i];
-            best_len = cmd_len;
         }
     }
 
-    // Suggest only if distance is small and input is not already correct
-    if (best && string_distance(input, best) > 0 && best_dist <= 4) {
+    // Check if input already starts with the best command
+    if (best && strncasecmp(input, best, strlen(best)) == 0) {
+        // Input already matches the command prefix, do not suggest
+        return NULL;
+    }
+
+    // Only suggest if distance is small
+    if (best && best_dist <= 3) {
         char *corrected = malloc(MAX_SUGGEST_LEN);
         if (!corrected) return NULL;
 
-        // Copy the best matching command
-        strcpy(corrected, best);
+        // Count words in best command
+        int words_in_best = 0;
+        for (int i = 0; best[i]; i++)
+            if (best[i] == ' ') words_in_best++;
+        words_in_best++; // total words
 
-        // Attach remaining input as parameters
-        const char *params = input + strlen(best);
-        while (*params == ' ') params++;
-        if (*params) {
+        // Skip same number of words in input to preserve parameters
+        const char *ptr = input;
+        int skip_words = words_in_best;
+        while (*ptr && skip_words > 0) {
+            if (*ptr == ' ') skip_words--;
+            ptr++;
+        }
+        while (*ptr == ' ') ptr++; // skip extra spaces
+
+        strcpy(corrected, best);
+        if (*ptr) {
             strcat(corrected, " ");
-            strcat(corrected, params);
+            strcat(corrected, ptr);
         }
 
         return corrected;
