@@ -67,16 +67,52 @@ static int parse_float(const char *s, float *out){
     return 1;
 }
 
-// ---------- validity checks ----------
-static int is_letters_spaces(const char *s){
+// NAME: allow ASCII letters, unicode letters, space, - ' . / ONLY
+static int is_valid_name(const char *s){
     int has_alpha = 0;
     const unsigned char *p = (const unsigned char*)s;
+
     while (*p){
-        if (isalpha(*p)){
+        unsigned char c = *p;
+
+        if (c >= 128){
+            // allow ANY unicode letter
             has_alpha = 1;
-        } else if (*p==' ' || *p=='-' || *p=='\'' || *p=='.' || *p=='/'){
-            // allowed
-        } else {
+        }
+        else if (isalpha(c)){
+            // allow ASCII A-Z a-z
+            has_alpha = 1;
+        }
+        else if (c==' ' || c=='-' || c=='\'' || c=='.' || c=='/'){
+            // allowed punctuation
+        }
+        else {
+            // block everything else:
+            // digits, symbols, %, #, @, !, &, (, ), = etc.
+            return 0;
+        }
+        p++;
+    }
+    return has_alpha;  // must contain at least one letter/unicode letter
+}
+
+
+/* PROGRAMME: strictly ASCII alphabets + spaces only */
+static int is_valid_programme(const char *s){
+    int has_alpha = 0;
+    const unsigned char *p = (const unsigned char*)s;
+
+    while (*p){
+        unsigned char c = *p;
+
+        if (isalpha(c)){
+            has_alpha = 1;
+        }
+        else if (c==' '){
+            // allow spaces
+        }
+        else {
+            // reject unicode, hyphen, apostrophe, digits, etc.
             return 0;
         }
         p++;
@@ -299,12 +335,7 @@ void insert_record(const char *command){
         return;
     }
 
-    if (!is_letters_spaces(name)){
-        printf("CMS: Invalid Name. Use only letters/spaces (- ' . / allowed).\n");
-        return;
-    }
-
-    if (contains_reserved_pattern(name)){
+    if (!is_valid_name(name)){
         printf("CMS: Invalid Name format for INSERT.\n");
         return;
     }
@@ -315,8 +346,8 @@ void insert_record(const char *command){
         return;
     }
 
-    if (!is_letters_spaces(programme)){
-        printf("CMS: Invalid Programme. Use only letters/spaces (- ' . / allowed).\n");
+    if (!is_valid_programme(programme)){
+        printf("CMS: Invalid Programme format for INSERT.\n");
         return;
     }
 
