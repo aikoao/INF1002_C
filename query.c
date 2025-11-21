@@ -128,7 +128,7 @@ void queryStudentByID(Student students[], int student_count, const char* idInput
         if (!isdigit((unsigned char)id[i])) valid = 0;  // Validate digits in trimmed string
     }
     if (!valid) {
-        printf("Please input a proper ID (2xxxxxx)\n");
+        printf("Please input a proper ID (xxxxxxx)\n");
         return;
     }
 
