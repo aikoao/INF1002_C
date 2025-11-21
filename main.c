@@ -79,66 +79,69 @@ int main() {
         if(strcmp(userinput, "OPEN") == 0) {
             openDatabase();
         }
+        else if(strcmp(userinput, "HELP") == 0) {
+            show_help();
+        }
+        else if(strcmp(userinput, "EXIT") == 0) {
+            break;
+        }
+        else if(strstr(userinput, "OPEN") != NULL) {
+            printf("CMS: Invalid command for OPEN. Please input OPEN to open database.\n");
+        }
+        else if(student_count == 0) {
+            printf("CMS: Error, no records found! Please open the database file first.\n");
+        }
         else if(strstr(userinput, "SHOW ALL") != 0) {
-            if(student_count == 0){
-                printf("CMS: Error, no records found! Please open the database file first.\n");
-            } else {
-
-                if(strcmp(userinput, "SHOW ALL") == 0){
-                    printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
-                    showAll();
-                }
-                else if(strcmp(userinput, "SHOW ALL SORT BY ID (ASCENDING)") == 0){
-                    printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
-                    sort_by_id_asc();
-                    showAll();
-                }
-                else if(strcmp(userinput, "SHOW ALL SORT BY ID (DESCENDING)") == 0){
-                    printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
-                    sort_by_id_desc();
-                    showAll();
-                }
-                else if(strcmp(userinput, "SHOW ALL SORT BY MARK (ASCENDING)") == 0){
-                    printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
-                    sort_by_mark_asc();
-                    showAll();
-                }
-                else if(strcmp(userinput, "SHOW ALL SORT BY MARK (DESCENDING)") == 0){
-                    printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
-                    sort_by_mark_desc();
-                    showAll();
-                }
-                else if(strcmp(userinput, "SHOW ALL SORT BY NAME (ASCENDING)") == 0){
-                    printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
-                    sort_by_name_asc();
-                    showAll();
-                }
-                else if(strcmp(userinput, "SHOW ALL SORT BY NAME (DESCENDING)") == 0){
-                    printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
-                    sort_by_name_desc();
-                    showAll();
-                }
-                else if(strcmp(userinput, "SHOW ALL SORT BY PROGRAMME (ASCENDING)") == 0){
-                    printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
-                    sort_by_programme_asc();
-                    showAll();
-                }
-                else if(strcmp(userinput, "SHOW ALL SORT BY PROGRAMME (DESCENDING)") == 0){
-                    printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
-                    sort_by_programme_desc();
-                    showAll();
-                }
-                else{
-                    printf("CMS: Error, invalid feature. Please enter 'HELP' for available commands!\n");
-                }
+            if(strcmp(userinput, "SHOW ALL") == 0){
+                printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
+                showAll();
+            }
+            else if(strcmp(userinput, "SHOW ALL SORT BY ID (ASCENDING)") == 0){
+                printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
+                sort_by_id_asc();
+                showAll();
+            }
+            else if(strcmp(userinput, "SHOW ALL SORT BY ID (DESCENDING)") == 0){
+                printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
+                sort_by_id_desc();
+                showAll();
+            }
+            else if(strcmp(userinput, "SHOW ALL SORT BY MARK (ASCENDING)") == 0){
+                printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
+                sort_by_mark_asc();
+                showAll();
+            }
+            else if(strcmp(userinput, "SHOW ALL SORT BY MARK (DESCENDING)") == 0){
+                printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
+                sort_by_mark_desc();
+                showAll();
+            }
+            else if(strcmp(userinput, "SHOW ALL SORT BY NAME (ASCENDING)") == 0){
+                printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
+                sort_by_name_asc();
+                showAll();
+            }
+            else if(strcmp(userinput, "SHOW ALL SORT BY NAME (DESCENDING)") == 0){
+                printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
+                sort_by_name_desc();
+                showAll();
+            }
+            else if(strcmp(userinput, "SHOW ALL SORT BY PROGRAMME (ASCENDING)") == 0){
+                printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
+                sort_by_programme_asc();
+                showAll();
+            }
+            else if(strcmp(userinput, "SHOW ALL SORT BY PROGRAMME (DESCENDING)") == 0){
+                printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
+                sort_by_programme_desc();
+                showAll();
+            }
+            else{
+                printf("CMS: Error, invalid feature. Please enter 'HELP' for available commands!\n");
             }
         }
         else if (strcmp(userinput, "SHOW SUMMARY") == 0) {
-            if (student_count == 0) {
-                printf("CMS: Error, no records found! Please open the database file first.\n");
-            } else {
-                show_summary();
-            }
+            show_summary();
         }
         else if(strstr(userinput, "UPDATE") != NULL) {
             update_record(original_input);
@@ -152,25 +155,11 @@ int main() {
         else if(strstr(userinput, "DELETE") != NULL) {
             delete_record(userinput);
         }
-        else if(strcmp(userinput, "HELP") == 0) {
-            show_help();
-        }
         else if(strcmp(userinput, "SAVE") == 0) {
-            if(student_count == 0){
-                printf("CMS: Error, no records to save! Please open the database file first!\n");
-            } else {
-                saveDatabase();
-            }
+            saveDatabase();
         }
         else if(strcmp(userinput, "UNDO") == 0) {
-            if (student_count == 0) {
-                printf("CMS: No records loaded. Please open the database file first.\n");
-            } else {
-                undo_last_command();
-            }
-        }
-        else if(strcmp(userinput, "EXIT") == 0) {
-            break;
+            undo_last_command();   
         }
         else {
             printf("CMS: Error, invalid feature. Please enter 'HELP' for available commands!\n");

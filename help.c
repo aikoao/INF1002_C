@@ -20,8 +20,8 @@ void show_help(void) {
     printf("  UPDATE ID=<number>                                                        - Update an existing student's info.\n");
     printf("  DELETE ID=<number>                                                        - Delete a student record by ID.\n");
     printf("  QUERY ID/NAME/PROGRAMME/GRADE=<>                                          - Search for records (by ID/name/programme/grade.).\n");
-    printf("  SHOW SUMMARY                                                              - Display summary for the records in the database");
-    printf("  UNDO                                                                      - Undo last operation (up to 3 steps\n");
+    printf("  SHOW SUMMARY                                                              - Display summary for the records in the database.\n");
+    printf("  UNDO                                                                      - Undo last operation (up to 3 steps).\n");
     printf("  SAVE                                                                      - Save all changes to the database file.\n");
     printf("  HELP                                                                      - Display this help menu.\n");
     printf("  EXIT                                                                      - Exit the program.\n");
