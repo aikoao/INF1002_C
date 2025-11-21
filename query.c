@@ -3,6 +3,25 @@
 #include <ctype.h>
 #include "query.h"
 
+char *strcasestr(const char *haystack, const char *needle) {
+    if (!*needle) {
+        return (char *)haystack;  // empty needle matches at start
+    }
+
+    for (; *haystack; haystack++) {
+        const char *h = haystack;
+        const char *n = needle;
+        while (*h && *n && (tolower((unsigned char)*h) == tolower((unsigned char)*n))) {
+            h++;
+            n++;
+        }
+        if (!*n) {
+            return (char *)haystack;  // match found
+        }
+    }
+    return NULL;  // no match
+}
+
 void trimSpaces(char *str) {
     // Remove starting spaces
     int start = 0;
@@ -28,7 +47,15 @@ void reduceInnerSpaces(char *str) {
     }
     str[j] = '\0';
 }
-
+void removeAllSpaces(char *str) {
+    int i, j=0;
+    for (i = 0; str[i]; i++) {
+        if (!isspace((unsigned char)str[i])) {
+            str[j++] = str[i];
+        }
+    }
+    str[j] = '\0';
+}
 
 void gradeRange(const char *grade, float *min, float *max) {
     if (strcmp(grade, "A+") == 0) {*min = 85; *max = 100;}
@@ -127,9 +154,14 @@ void queryStudentByName(Student students[], int student_count, const char* query
     queryName[NAME_LENGTH-1] = '\0';
     trimSpaces(queryName);
     reduceInnerSpaces(queryName);
+    removeAllSpaces(queryName);
     int found = 0;
     for (int i = 0; i < student_count; i++) {
-        if (strcasecmp(students[i].name, queryName) == 0) {
+        char nameNoSpace[NAME_LENGTH];
+        strncpy(nameNoSpace, students[i].name, NAME_LENGTH-1);
+        nameNoSpace[NAME_LENGTH-1] = '\0';
+        removeAllSpaces(nameNoSpace);
+        if (strcasestr(nameNoSpace, queryName) != NULL) {
             if (!found) printf("Record(s) Found:\n%-10s %-22s %-26s %-8s\n", "ID", "Name", "Programme", "Mark");
             printf("%-10d %-22s %-26s %-8.2f\n", students[i].id, students[i].name, students[i].programme, students[i].mark);
             found = 1;
@@ -144,9 +176,14 @@ void queryStudentByProgramme(Student students[], int student_count, const char* 
     queryProg[PROGRAMME_LENGTH-1] = '\0';
     trimSpaces(queryProg);
     reduceInnerSpaces(queryProg);
+    removeAllSpaces(queryProg);
     int found = 0;
     for (int i = 0; i < student_count; i++) {
-        if (strcasecmp(students[i].programme, queryProg) == 0) {
+        char progNoSpace[PROGRAMME_LENGTH];
+        strncpy(progNoSpace, students[i].programme, PROGRAMME_LENGTH-1);
+        progNoSpace[PROGRAMME_LENGTH-1] = '\0';
+        removeAllSpaces(progNoSpace);
+        if (strcasestr(progNoSpace, queryProg) != NULL) {
             if (!found) printf("Record(s) Found:\n%-10s %-22s %-26s %-8s\n", "ID", "Name", "Programme", "Mark");
             printf("%-10d %-22s %-26s %-8.2f\n", students[i].id, students[i].name, students[i].programme, students[i].mark);
             found = 1;
@@ -201,19 +238,27 @@ void queryStudentByGradeAndProgramme(Student students[], int studentcount, const
     queryProg[PROGRAMME_LENGTH - 1] = '\0';
     trimSpaces(queryProg);
     reduceInnerSpaces(queryProg);
+    removeAllSpaces(queryProg);  // Remove spaces for loose matching
     
-    // Search students matching both grade range and programme
+    // Search students matching both grade range and programme substring
     for (int i = 0; i < studentcount; i++) {
-        if (strcasecmp(students[i].programme, queryProg) == 0 &&
-            students[i].mark >= minScore &&
-            students[i].mark <= maxScore) {
-            if (!found) printf("Record(s) Found:\n%-10s %-22s %-26s %-8s\n", "ID", "Name", "Programme", "Mark");
+        char progNoSpace[PROGRAMME_LENGTH];
+        strncpy(progNoSpace, students[i].programme, PROGRAMME_LENGTH - 1);
+        progNoSpace[PROGRAMME_LENGTH - 1] = '\0';
+        removeAllSpaces(progNoSpace);
+        
+        if (students[i].mark >= minScore &&
+            students[i].mark <= maxScore &&
+            strcasestr(progNoSpace, queryProg) != NULL) {
+            if (!found) {
+                printf("Record(s) Found:\n%-10s %-22s %-26s %-8s\n", "ID", "Name", "Programme", "Mark");
+            }
             printf("%-10d %-22s %-26s %-8.2f\n", students[i].id, students[i].name, students[i].programme, students[i].mark);
             found = 1;
         }
     }
     
     if (!found) {
-        printf("Warning: No records found for grade '%s' and programme '%s'.\n", gradeInput, queryProg);
+        printf("Warning: No records found for grade '%s' and programme '%s'.\n", gradeInput, programmeInput);
     }
 }
