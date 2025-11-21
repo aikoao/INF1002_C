@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include "autocorrect.h"
 
-// List of valid commands
 const char *commands[] = {
     "OPEN",
     "SHOW ALL",
@@ -26,39 +25,61 @@ const char *commands[] = {
 };
 
 #define NUM_COMMANDS (sizeof(commands)/sizeof(commands[0]))
+#define MAX_SUGGEST_LEN 300
 
+// Simple case-insensitive Levenshtein-like distance
 int string_distance(const char *a, const char *b) {
-    // Simple Levenshtein-like distance for small strings
     int dist = 0;
     int len_a = strlen(a);
     int len_b = strlen(b);
     int min_len = len_a < len_b ? len_a : len_b;
 
-    for (int i = 0; i < min_len; i++) {
+    for (int i = 0; i < min_len; i++)
         if (toupper(a[i]) != toupper(b[i]))
             dist++;
-    }
+
     dist += abs(len_a - len_b);
     return dist;
 }
 
+// Return a corrected full command with parameters preserved
 char* autocorrect_command_prompt(const char *input) {
-    if (input == NULL || strlen(input) == 0) return NULL;
+    if (!input || strlen(input) == 0) return NULL;
 
-    const char *best_match = NULL;
-    int best_distance = 1000;
+    const char *best = NULL;
+    int best_dist = 1000;
 
+    // Compare input to all command prefixes
     for (int i = 0; i < NUM_COMMANDS; i++) {
-        int dist = string_distance(input, commands[i]);
-        if (dist < best_distance) {
-            best_distance = dist;
-            best_match = commands[i];
+        int cmd_len = strlen(commands[i]);
+        int prefix_len = cmd_len < strlen(input) ? cmd_len : strlen(input);
+
+        // Compare only the input length against the command prefix
+        char input_prefix[100];
+        strncpy(input_prefix, input, prefix_len);
+        input_prefix[prefix_len] = '\0';
+
+        int d = string_distance(input_prefix, commands[i]);
+        if (d < best_dist) {
+            best_dist = d;
+            best = commands[i];
         }
     }
 
-    // Only suggest if it's actually different
-    if (best_match != NULL && strcasecmp(best_match, input) != 0 && best_distance <= 3) {
-        return (char*)best_match;
+    // Only suggest if distance small enough and input is not already a match
+    if (best && strncasecmp(best, input, strlen(best)) != 0 && best_dist <= 3) {
+        char *corrected = malloc(MAX_SUGGEST_LEN);
+        if (!corrected) return NULL;
+
+        // Preserve everything after first space (parameters)
+        const char *space = strchr(input, ' ');
+        if (space) {
+            strcpy(corrected, best);
+            strcat(corrected, space);
+        } else {
+            strcpy(corrected, best);
+        }
+        return corrected;
     }
 
     return NULL;
