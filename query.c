@@ -46,7 +46,25 @@ void gradeRange(const char *grade, float *min, float *max) {
 }
 
 void query_process(const char* input, Student students[], int student_count) {
-    if (strstr(input, "ID=") != NULL) {
+    if (strstr(input, "GRADE") && strstr(input, "PROGRAMME")) {
+        const char* gradePos = strstr(input, "GRADE=");
+        const char* progPos = strstr(input, "PROGRAMME=");
+        if (gradePos && progPos) {
+            char gradeVal[8], progVal[PROGRAMME_LENGTH];
+        
+            sscanf(gradePos, "GRADE=%7s", gradeVal);
+        
+            const char* progStart = progPos + strlen("PROGRAMME=");
+            strncpy(progVal, progStart, PROGRAMME_LENGTH - 1);
+            progVal[PROGRAMME_LENGTH - 1] = '\0';
+            trimSpaces(progVal);
+            reduceInnerSpaces(progVal);
+        
+            queryStudentByGradeAndProgramme(students, student_count, gradeVal, progVal);
+            return; // Exit after execution
+        }
+    }
+    else if (strstr(input, "ID=") != NULL) {
         const char* idpos = strstr(input, "ID=") + 3;
         while (*idpos == ' ') idpos++;
         queryStudentByID(students, student_count, idpos);
@@ -157,4 +175,45 @@ void queryStudentByGrade(Student students[], int student_count, const char* grad
         }
     }
     if (!found) { printf("Warning: No record found for grade %s.\n", gradeInput); }
+}
+void queryStudentByGradeAndProgramme(Student students[], int studentcount, const char* gradeInput, const char* programmeInput) {
+    char grade[4];
+    float minScore, maxScore;
+    int found = 0;
+
+    // Copy and uppercase the grade input
+    strncpy(grade, gradeInput, 3);
+    grade[3] = '\0';
+    for (int i = 0; grade[i]; i++) {
+        grade[i] = toupper((unsigned char)grade[i]);
+    }
+    
+    // Get the score range for the grade
+    gradeRange(grade, &minScore, &maxScore);
+    if (minScore < 0) {
+        printf("Invalid grade entered.\n");
+        return;
+    }
+    
+    // Normalize programme input
+    char queryProg[PROGRAMME_LENGTH];
+    strncpy(queryProg, programmeInput, PROGRAMME_LENGTH - 1);
+    queryProg[PROGRAMME_LENGTH - 1] = '\0';
+    trimSpaces(queryProg);
+    reduceInnerSpaces(queryProg);
+    
+    // Search students matching both grade range and programme
+    for (int i = 0; i < studentcount; i++) {
+        if (strcasecmp(students[i].programme, queryProg) == 0 &&
+            students[i].mark >= minScore &&
+            students[i].mark <= maxScore) {
+            if (!found) printf("Record(s) Found:\n%-10s %-22s %-26s %-8s\n", "ID", "Name", "Programme", "Mark");
+            printf("%-10d %-22s %-26s %-8.2f\n", students[i].id, students[i].name, students[i].programme, students[i].mark);
+            found = 1;
+        }
+    }
+    
+    if (!found) {
+        printf("Warning: No records found for grade '%s' and programme '%s'.\n", gradeInput, queryProg);
+    }
 }
