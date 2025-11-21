@@ -4,6 +4,19 @@
 #include <ctype.h>
 #include "database.h"
 
+static void to_title_case(char *s){
+    int cap = 1;
+    for(int i = 0; s[i]; i++){
+        if (isspace((unsigned char)s[i]) || s[i]=='-' || s[i]=='\'' || s[i]=='/'){
+            cap = 1;
+        } else if (cap){
+            s[i] = toupper((unsigned char)s[i]);
+            cap = 0;
+        } else {
+            s[i] = tolower((unsigned char)s[i]);
+        }
+    }
+}
 
 // ---------- helper functions ----------
 
@@ -163,7 +176,7 @@ static int find_index_by_id(int id){
 
 // ---------- main insert logic ----------
 void insert_record(const char *command){
-    // Save state BEFORE making changes
+    // Save state BEFORE making changes (for your UNDO feature)
     save_undo_state("INSERT operation");
 
     if(!command){
@@ -179,7 +192,6 @@ void insert_record(const char *command){
     if(!extract_value(command,"ID=",idbuf,sizeof idbuf)){
         printf("CMS: Missing ID for INSERT.\n"); return;
     }
-    // additional ID format checks: exactly 7 digits, first 2 digits between 15 and 25
     int len = (int)strlen(idbuf);
     if (len != 7){
         printf("CMS: Invalid ID format. ID must be a 7-digit number from 15XXXXX to 25XXXXX.\n");
@@ -251,6 +263,10 @@ void insert_record(const char *command){
         printf("CMS: Database full. Cannot insert more records.\n");
         return;
     }
+
+    // 👉 NORMALISE CASING *before* saving
+    to_title_case(name);
+    to_title_case(programme);
 
     // insert new record
     students[student_count].id = id;

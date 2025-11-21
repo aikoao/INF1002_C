@@ -146,8 +146,8 @@ int main() {
         else if (strstr(userinput, "QUERY") != NULL) {
             query_process(userinput, students, student_count);
         }
-        else if(strstr(userinput, "INSERT") != NULL) {
-            insert_record(userinput);
+        else if (strstr(userinput, "INSERT") != NULL) {
+            insert_record(original_input);   // <-- use original casing
         }
         else if(strstr(userinput, "DELETE") != NULL) {
             delete_record(userinput);
