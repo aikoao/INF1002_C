@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdlib.h>
 #include "database.h"
 #include "query.h"
 #include "autocorrect.h"
@@ -17,7 +18,8 @@ void trim(char *str){
             str[i] = str[start];
             i++;
             start++;
-        } str[i] = '\0';
+        } 
+        str[i] = '\0';
     }
 
     int end = strlen(str) - 1;
@@ -52,28 +54,28 @@ int main() {
     while(1) {
         char userinput[256];
         char original_input[256];
-        char command[50];
-        char filename[100] = "";
 
         printf("P4_8: ");
         fgets(userinput, sizeof(userinput), stdin);
-        userinput[strlen(userinput)-1] = '\0';
+        userinput[strcspn(userinput, "\n")] = '\0';
 
         trim(userinput);
         strcpy(original_input, userinput);
 
         char *suggestion = autocorrect_command_prompt(userinput);
-        if (suggestion != NULL && strcmp(suggestion, userinput) != 0) {
-            char answer[10];
+        if (suggestion != NULL) {
             printf("CMS: Did you mean '%s'? (Y/N): ", suggestion);
+            char answer[10];
             fgets(answer, sizeof(answer), stdin);
             if (toupper(answer[0]) == 'Y') {
                 strcpy(userinput, suggestion);
                 strcpy(original_input, suggestion);
             }
+            free(suggestion);
         }
 
-        for(int i=0; userinput[i]; i++)
+
+        for(int i = 0; userinput[i]; i++)
             userinput[i] = toupper(userinput[i]);
 
         if(strcmp(userinput, "OPEN") == 0) {
@@ -147,13 +149,13 @@ int main() {
             update_record(original_input);
         }
         else if (strstr(userinput, "QUERY") != NULL) {
-            query_process(userinput, students, student_count);
+            query_process(original_input, students, student_count);
         }
         else if (strstr(userinput, "INSERT") != NULL) {
             insert_record(original_input);  
         }
         else if(strstr(userinput, "DELETE") != NULL) {
-            delete_record(userinput);
+            delete_record(original_input);
         }
         else if(strcmp(userinput, "SAVE") == 0) {
             saveDatabase();
