@@ -161,7 +161,7 @@ void queryStudentByName(Student students[], int student_count, const char* query
         strncpy(nameNoSpace, students[i].name, NAME_LENGTH-1);
         nameNoSpace[NAME_LENGTH-1] = '\0';
         removeAllSpaces(nameNoSpace);
-        if (strcasestr(nameNoSpace, queryName) != NULL) {
+        if (strncasecmp(nameNoSpace, queryName, strlen(queryName)) == 0) {
             if (!found) printf("Record(s) Found:\n%-10s %-22s %-26s %-8s\n", "ID", "Name", "Programme", "Mark");
             printf("%-10d %-22s %-26s %-8.2f\n", students[i].id, students[i].name, students[i].programme, students[i].mark);
             found = 1;
