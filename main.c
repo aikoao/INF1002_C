@@ -31,13 +31,13 @@ void trim(char *str){
 
 int main() {
     printf("--Declaration--\n");
-    printf("SIT's policy on copying does not allow the students to copy source code as well as assesment solutions from another person AI or other places. ");
+    printf("SIT's policy on copying does not allow the students to copy source code as well as assessment solutions from another person, AI, or other sources. ");
     printf("It is the students' responsibility to guarantee that their assessment solutions are their own work. ");
-    printf("Meanwhile, the students must also ensure that their work is not accessible by others. ");
+    printf("Meanwhile, students must also ensure their work is not accessible by others. ");
     printf("Where such plagiarism is detected, both of the assessments involved will receive ZERO mark.\n");
     printf("We hereby declare that: \n");
     printf(" - We fully understand and agree to the above mentioned plagiarism policy.\n");
-    printf(" - We did not copy any code from others or from other places.\n");
+    printf(" - We did not copy any code from others or from other sources.\n");
     printf(" - We did not share our codes with others or upload to any other places for public access and will not do that in the future.\n");
     printf(" - We agree that our project will receive Zero mark if there is any plagiarism detected.\n");
     printf(" - We agree that we will not disclose any information or material of the group project to others or upload to any other places for public access.\n");
@@ -58,11 +58,11 @@ int main() {
         printf("P4_8: ");
         fgets(userinput, sizeof(userinput), stdin);
         userinput[strcspn(userinput, "\n")] = '\0';
-
         trim(userinput);
         strcpy(original_input, userinput);
 
-        char *suggestion = autocorrect_command_prompt(userinput);
+        // Autocorrect command
+        char *suggestion = autocorrect_command(userinput);
         if (suggestion != NULL) {
             printf("CMS: Did you mean '%s'? (Y/N): ", suggestion);
             char answer[10];
@@ -74,98 +74,88 @@ int main() {
             free(suggestion);
         }
 
-
-        for(int i = 0; userinput[i]; i++)
-            userinput[i] = toupper(userinput[i]);
-
-        if(strcmp(userinput, "OPEN") == 0) {
+        // Command handling using case-insensitive prefix checks
+        if (strncasecmp(userinput, "OPEN", 4) == 0 && strlen(userinput) == 4) {
             openDatabase();
         }
-        else if(strcmp(userinput, "HELP") == 0) {
+        else if (strncasecmp(userinput, "HELP", 4) == 0 && strlen(userinput) == 4) {
             show_help();
         }
-        else if(strcmp(userinput, "EXIT") == 0) {
+        else if (strncasecmp(userinput, "EXIT", 4) == 0 && strlen(userinput) == 4) {
             break;
         }
-        else if(strstr(userinput, "OPEN") != NULL) {
+        else if (strncasecmp(userinput, "OPEN", 4) == 0) {
             printf("CMS: Invalid command for OPEN. Please input OPEN to open database.\n");
         }
-        else if(student_count == 0) {
+        else if (student_count == 0) {
             printf("CMS: Error, no records found! Please open the database file first.\n");
         }
-        else if(strstr(userinput, "SHOW ALL") != 0) {
-            if(strcmp(userinput, "SHOW ALL") == 0){
+        else if (strncasecmp(userinput, "SHOW ALL", 8) == 0) {
+            if (strcasecmp(userinput, "SHOW ALL") == 0) {
                 printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
                 showAll();
             }
-            else if(strcmp(userinput, "SHOW ALL SORT BY ID (ASCENDING)") == 0){
-                printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
+            else if (strcasecmp(userinput, "SHOW ALL SORT BY ID (ASCENDING)") == 0) {
                 sort_by_id_asc();
                 showAll();
             }
-            else if(strcmp(userinput, "SHOW ALL SORT BY ID (DESCENDING)") == 0){
-                printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
+            else if (strcasecmp(userinput, "SHOW ALL SORT BY ID (DESCENDING)") == 0) {
                 sort_by_id_desc();
                 showAll();
             }
-            else if(strcmp(userinput, "SHOW ALL SORT BY MARK (ASCENDING)") == 0){
-                printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
+            else if (strcasecmp(userinput, "SHOW ALL SORT BY MARK (ASCENDING)") == 0) {
                 sort_by_mark_asc();
                 showAll();
             }
-            else if(strcmp(userinput, "SHOW ALL SORT BY MARK (DESCENDING)") == 0){
-                printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
+            else if (strcasecmp(userinput, "SHOW ALL SORT BY MARK (DESCENDING)") == 0) {
                 sort_by_mark_desc();
                 showAll();
             }
-            else if(strcmp(userinput, "SHOW ALL SORT BY NAME (ASCENDING)") == 0){
-                printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
+            else if (strcasecmp(userinput, "SHOW ALL SORT BY NAME (ASCENDING)") == 0) {
                 sort_by_name_asc();
                 showAll();
             }
-            else if(strcmp(userinput, "SHOW ALL SORT BY NAME (DESCENDING)") == 0){
-                printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
+            else if (strcasecmp(userinput, "SHOW ALL SORT BY NAME (DESCENDING)") == 0) {
                 sort_by_name_desc();
                 showAll();
             }
-            else if(strcmp(userinput, "SHOW ALL SORT BY PROGRAMME (ASCENDING)") == 0){
-                printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
+            else if (strcasecmp(userinput, "SHOW ALL SORT BY PROGRAMME (ASCENDING)") == 0) {
                 sort_by_programme_asc();
                 showAll();
             }
-            else if(strcmp(userinput, "SHOW ALL SORT BY PROGRAMME (DESCENDING)") == 0){
-                printf("CMS: Here are all the records found in the table \"StudentRecords\".\n");
+            else if (strcasecmp(userinput, "SHOW ALL SORT BY PROGRAMME (DESCENDING)") == 0) {
                 sort_by_programme_desc();
                 showAll();
             }
-            else{
+            else {
                 printf("CMS: Error, invalid feature. Please enter 'HELP' for available commands!\n");
             }
         }
-        else if (strcmp(userinput, "SHOW SUMMARY") == 0) {
+        else if (strncasecmp(userinput, "SHOW SUMMARY", 12) == 0) {
             show_summary();
         }
-        else if(strstr(userinput, "UPDATE") != NULL) {
+        else if (strncasecmp(userinput, "UPDATE", 6) == 0) {
             update_record(original_input);
         }
-        else if (strstr(userinput, "QUERY") != NULL) {
+        else if (strncasecmp(userinput, "QUERY", 5) == 0) {
             query_process(original_input, students, student_count);
         }
-        else if (strstr(userinput, "INSERT") != NULL) {
-            insert_record(original_input);  
+        else if (strncasecmp(userinput, "INSERT", 6) == 0) {
+            insert_record(original_input);
         }
-        else if(strstr(userinput, "DELETE") != NULL) {
+        else if (strncasecmp(userinput, "DELETE", 6) == 0) {
             delete_record(original_input);
         }
-        else if(strcmp(userinput, "SAVE") == 0) {
+        else if (strncasecmp(userinput, "SAVE", 4) == 0) {
             saveDatabase();
         }
-        else if(strcmp(userinput, "UNDO") == 0) {
-            undo_last_command();   
+        else if (strncasecmp(userinput, "UNDO", 4) == 0) {
+            undo_last_command();
         }
         else {
             printf("CMS: Error, invalid feature. Please enter 'HELP' for available commands!\n");
         }
     }
+
     return 0;
 }
