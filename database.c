@@ -52,13 +52,32 @@ void openDatabase(void) {
     
 }
 
+void truncate_text(const char *source, char *destination, int max_width) {
+    int source_len = strlen(source);
+
+    if (source_len > max_width) {
+        strncpy(destination, source, max_width - 3); // Truncate to max_width 3 to leave room for "..."
+        destination[max_width - 3] = '\0'; // Null terminate
+        strcat(destination, "..."); // Add 3 dots
+    }
+    else{
+        strcpy(destination, source);
+    }
+}
+
 void showAll(void) {
     printf("%-10s %-22s %-26s %-8s\n", "ID", "Name", "Programme", "Mark");
     for(int i = 0; i < student_count; i++){ // Loop through all student record
+        char truncated_name[30];
+        char truncated_programme[35];
+
+        truncate_text(students[i].name, truncated_name, 22);
+        truncate_text(students[i].programme, truncated_programme, 26);
+
         printf("%-10d %-22s %-26s %-8.2f\n", 
             students[i].id, 
-            students[i].name, 
-            students[i].programme, 
+            truncated_name, 
+            truncated_programme, 
             students[i].mark);
     }
 }
