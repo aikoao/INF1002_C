@@ -13,6 +13,6 @@
 2201234 (Isaac Teo) Computer Science 63.40
 2508324 (Nurul Huda) Applied Computing 61.75
 2304509 (Daniel Lim) Electrical Engineering 54.00
-2001000 (Abishek Tan) Electrial Engineering 45.50
+2001000 (Abishek Tan) Electrical Engineering 45.50
 2000222 (Paul Walker) Business Analytics 23.50
 2301234 (Paul Lim) Fashion Design 20.30
