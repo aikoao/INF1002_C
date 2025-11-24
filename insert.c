@@ -4,7 +4,7 @@
 #include <ctype.h>
 #include "database.h"
 
-// ---------- Title-case helper ----------
+//upper case, lower case
 static void to_title_case(char *s){
     int cap = 1;
     for (int i = 0; s[i]; i++){
@@ -20,7 +20,7 @@ static void to_title_case(char *s){
     }
 }
 
-// ---------- trim helpers ----------
+// spacing
 static void rtrim(char *s){
     int n = (int)strlen(s);
     while (n > 0 && isspace((unsigned char)s[n-1])){
@@ -42,7 +42,7 @@ static void trim(char *s){
     ltrim(s);
 }
 
-// ---------- parse helpers ----------
+//parse helpers 
 static int parse_int(const char *s, int *out){
     char *e;
     long v = strtol(s, &e, 10);
@@ -54,7 +54,6 @@ static int parse_int(const char *s, int *out){
     *out = (int)v;
     return 1;
 }
-
 static int parse_float(const char *s, float *out){
     char *e;
     float v = strtof(s, &e);
@@ -67,7 +66,7 @@ static int parse_float(const char *s, float *out){
     return 1;
 }
 
-// NAME: allow ASCII letters, unicode letters, space, - ' . / ONLY
+// for name to inlcude only certain special characters
 static int is_valid_name(const char *s){
     int has_alpha = 0;
     const unsigned char *p = (const unsigned char*)s;
@@ -76,28 +75,23 @@ static int is_valid_name(const char *s){
         unsigned char c = *p;
 
         if (c >= 128){
-            // allow ANY unicode letter
             has_alpha = 1;
         }
         else if (isalpha(c)){
-            // allow ASCII A-Z a-z
             has_alpha = 1;
         }
-        else if (c==' ' || c=='-' || c=='\'' || c=='.' || c=='/'){
-            // allowed punctuation
+        else if (c==' ' || c=='-' || c=='\'' || c=='.' || c=='/'){ // allowed ones
         }
         else {
-            // block everything else:
-            // digits, symbols, %, #, @, !, &, (, ), = etc.
             return 0;
         }
         p++;
     }
-    return has_alpha;  // must contain at least one letter/unicode letter
+    return has_alpha; 
 }
 
 
-/* PROGRAMME: strictly ASCII alphabets + spaces only */
+// for programme to not accept any special character 
 static int is_valid_programme(const char *s){
     int has_alpha = 0;
     const unsigned char *p = (const unsigned char*)s;
@@ -109,10 +103,8 @@ static int is_valid_programme(const char *s){
             has_alpha = 1;
         }
         else if (c==' '){
-            // allow spaces
         }
         else {
-            // reject unicode, hyphen, apostrophe, digits, etc.
             return 0;
         }
         p++;
@@ -129,8 +121,6 @@ static int ci_starts_with(const char *s, const char *pat){
     }
     return *pat == '\0';
 }
-
-// case-insensitive strstr
 static const char* ci_strstr(const char *hay, const char *needle){
     if (!*needle) return hay;
     for (const char *p = hay; *p; ++p){
@@ -141,12 +131,12 @@ static const char* ci_strstr(const char *hay, const char *needle){
             ++h;
             ++n;
         }
-        if (!*n) return p;  // found
+        if (!*n) return p;
     }
     return NULL;
 }
 
-/* return 1 if value contains another field pattern like "ID=" inside */
+// make sure no duplicate fields
 static int contains_reserved_pattern(const char *s){
     return  ci_strstr(s, "ID=")        ||
             ci_strstr(s, "NAME=")      ||
@@ -156,8 +146,6 @@ static int contains_reserved_pattern(const char *s){
             ci_strstr(s, "MARK=")      ||
             ci_strstr(s, "MARKS=");
 }
-
-/* generic duplicate-key checker: returns 1 if key appears more than once */
 static int has_duplicate_key(const char *command, const char *key_with_eq){
     size_t klen = strlen(key_with_eq);
     const char *first = ci_strstr(command, key_with_eq);
@@ -166,14 +154,8 @@ static int has_duplicate_key(const char *command, const char *key_with_eq){
     return second != NULL;
 }
 
-/*
- * Extract value for a given key (e.g., "Name="):
- *  - matches key in any case
- *  - allows spaces around '='
- *  - value ends at next key (ID/NAME/PROGRAMME/PROGRAM/PROG/MARK/MARKS) or end of line
- */
+
 static int extract_value(const char *line, const char *key_with_eq, char *out, size_t outsz){
-    // bare key: "Name" from "Name="
     char bare[16];
     size_t klen = 0;
     while (key_with_eq[klen] && key_with_eq[klen] != '=' && klen < sizeof(bare)-1){
@@ -204,7 +186,6 @@ static int extract_value(const char *line, const char *key_with_eq, char *out, s
         p++;
     }
     if (!start) return 0;
-
     const char *end = line + strlen(line);
     const char *scan = start;
 
@@ -246,7 +227,7 @@ value_end_found:;
     return out[0] != '\0';
 }
 
-// find existing ID
+// find if there are dupluicated id
 static int find_index_by_id(int id){
     for (int i = 0; i < student_count; i++){
         if (students[i].id == id)
@@ -255,7 +236,7 @@ static int find_index_by_id(int id){
     return -1;
 }
 
-// ---------- main INSERT ----------
+// main part
 void insert_record(const char *command){
     // Save state BEFORE making changes (for UNDO)
     save_undo_state("INSERT operation");
@@ -265,7 +246,7 @@ void insert_record(const char *command){
         return;
     }
 
-    // ---------- duplicate keyword checks ----------
+    // duplicate keyword check
     if (has_duplicate_key(command, "id=")){
         printf("CMS: Invalid ID format for INSERT.\n");
         return;
@@ -274,7 +255,6 @@ void insert_record(const char *command){
         printf("CMS: Invalid Name format for INSERT.\n");
         return;
     }
-    // treat programme/program/prog as same field
     if (has_duplicate_key(command, "programme=") ||
         has_duplicate_key(command, "program=")   ||
         has_duplicate_key(command, "prog=")){
@@ -295,95 +275,82 @@ void insert_record(const char *command){
     int id;
     float mark;
 
-    /* ---------- ID ---------- */
+    //for id
     if (!extract_value(command, "ID=", idbuf, sizeof idbuf)){
         printf("CMS: Missing ID for INSERT.\n");
         return;
     }
-
     int len = (int)strlen(idbuf);
     if (len != 7){
         printf("CMS: Invalid ID format. ID must be a 7-digit number from 1500000 to 2599999.\n");
         return;
     }
-
     for (int i = 0; i < len; ++i){
         if (!isdigit((unsigned char)idbuf[i])){
             printf("CMS: Invalid ID format. ID must be numeric.\n");
             return;
         }
     }
-
     if (!parse_int(idbuf, &id)){
         printf("CMS: Invalid ID value.\n");
         return;
     }
-
     if (id < 1500000 || id > 2599999){
         printf("CMS: Invalid ID range. Only IDs from 1500000 to 2599999 are allowed.\n");
         return;
     }
-
     if (find_index_by_id(id) != -1){
         printf("CMS: The record with ID=%d already exists.\n", id);
         return;
     }
 
-    /* ---------- Name ---------- */
+    //for name
     if (!extract_value(command, "Name=", name, sizeof name) || name[0] == '\0'){
         printf("CMS: Missing Name for INSERT.\n");
         return;
     }
-
     if (!is_valid_name(name)){
         printf("CMS: Invalid Name format for INSERT.\n");
         return;
     }
 
-    /* ---------- Programme ---------- */
+    //for program
     if (!extract_value(command, "Programme=", programme, sizeof programme) || programme[0] == '\0'){
         printf("CMS: Missing Programme for INSERT.\n");
         return;
     }
-
     if (!is_valid_programme(programme)){
         printf("CMS: Invalid Programme format for INSERT.\n");
         return;
     }
-
     if (contains_reserved_pattern(programme)){
         printf("CMS: Invalid Programme format for INSERT.\n");
         return;
     }
 
-    /* ---------- Mark ---------- */
+    //for mark
     if (!extract_value(command, "Mark=", markbuf, sizeof markbuf)){
         printf("CMS: Missing Mark for INSERT.\n");
         return;
     }
-
     if (contains_reserved_pattern(markbuf)){
         printf("CMS: Invalid Mark format for INSERT.\n");
         return;
     }
-
     if (!parse_float(markbuf, &mark)){
         printf("CMS: Invalid Mark value. Must be numeric.\n");
         return;
     }
-
     if (mark < 0.0f || mark > 100.0f){
         printf("CMS: Invalid Mark. Must be between 0.00 and 100.00.\n");
         return;
     }
-
-    // round mark to 2 decimal places
     {
-        int tmp = (int)(mark * 100.0f + (mark >= 0 ? 0.5f : -0.5f));
+        int tmp = (int)(mark * 100.0f + (mark >= 0 ? 0.5f : -0.5f)); // round mark to 2 decimal places
         mark = tmp / 100.0f;
     }
 
-    // database full?
+    // check if the database is full
     if (student_count >= MAX_RECORDS){
         printf("CMS: Database full. Cannot insert more records.\n");
         return;
@@ -393,14 +360,12 @@ void insert_record(const char *command){
     to_title_case(name);
     to_title_case(programme);
 
-    // insert new record
+    // insert
     students[student_count].id = id;
     strncpy(students[student_count].name, name, NAME_LENGTH - 1);
     students[student_count].name[NAME_LENGTH - 1] = '\0';
-
     strncpy(students[student_count].programme, programme, PROGRAMME_LENGTH - 1);
     students[student_count].programme[PROGRAMME_LENGTH - 1] = '\0';
-
     students[student_count].mark = mark;
     student_count++;
 
