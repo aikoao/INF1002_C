@@ -7,30 +7,27 @@
 void delete_record(const char* command) {
     int id = -1;
 
-    // Convert command to uppercase for command checking
     char upper[100];
     strcpy(upper, command);
     for (int i = 0; upper[i]; i++)
         upper[i] = toupper(upper[i]);
 
-    // Check correct starting format
+
     if (strncmp(upper, "DELETE ID=", 10) != 0) {
         printf("CMS: Wrong delete format. Use: DELETE ID=xxxxxxx\n");
         return;
     }
 
-    const char* id_str = command + 10; // Extract part after DELETE ID=
+    const char* id_str = command + 10; 
 
-    // Trim whitespace
+
     while (*id_str == ' ') id_str++;
 
-    // 1. Length check (exactly 7 digits)
     if (strlen(id_str) != 7) {
         printf("CMS: Invalid ID. Must be exactly 7 digits.\n");
         return;
     }
 
-    // 2. Digit check
     for (int i = 0; i < 7; i++) {
         if (!isdigit(id_str[i])) {
             printf("CMS: ID must contain only digits.\n");
@@ -38,10 +35,8 @@ void delete_record(const char* command) {
         }
     }
 
-    // Safe to convert
     id = atoi(id_str);
 
-    // Find matching record
     int index = -1;
     for (int i = 0; i < student_count; i++) {
         if (students[i].id == id) {
@@ -55,12 +50,10 @@ void delete_record(const char* command) {
         return;
     }
 
-    // Save undo state BEFORE deletion
     char description[50];
     snprintf(description, sizeof(description), "DELETE ID=%d", id);
     save_undo_state(description);
 
-    // Confirmation
     printf("CMS: Are you sure you want to delete record with ID=%d? Type \"Y\" to confirm or type \"N\" to cancel.\n", id);
     printf("P4_8: ");
     char confirm[10];
@@ -75,7 +68,6 @@ void delete_record(const char* command) {
         return;
     }
 
-    // Delete record
     for (int i = index; i < student_count - 1; i++) {
         students[i] = students[i + 1];
     }

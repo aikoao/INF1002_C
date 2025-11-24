@@ -29,7 +29,6 @@ const char *commands[] = {
 #define NUM_COMMANDS (sizeof(commands)/sizeof(commands[0]))
 #define MAX_SUGGEST_LEN 300
 
-// Case-insensitive Levenshtein-style distance
 int string_distance(const char *a, const char *b) {
     int dist = 0;
     int len_a = strlen(a);
@@ -50,7 +49,6 @@ char* autocorrect_command(const char *input) {
     const char *best = NULL;
     int best_dist = 1000;
 
-    // Loop through all commands
     for (int i = 0; i < NUM_COMMANDS; i++) {
         int len = strlen(commands[i]);
         int compare_len = len < strlen(input) ? len : strlen(input);
@@ -66,31 +64,26 @@ char* autocorrect_command(const char *input) {
         }
     }
 
-    // Check if input already starts with the best command
     if (best && strncasecmp(input, best, strlen(best)) == 0) {
-        // Input already matches the command prefix, do not suggest
         return NULL;
     }
 
-    // Only suggest if distance is small
     if (best && best_dist <= 3) {
         char *corrected = malloc(MAX_SUGGEST_LEN);
         if (!corrected) return NULL;
 
-        // Count words in best command
         int words_in_best = 0;
         for (int i = 0; best[i]; i++)
             if (best[i] == ' ') words_in_best++;
-        words_in_best++; // total words
+        words_in_best++; 
 
-        // Skip same number of words in input to preserve parameters
         const char *ptr = input;
         int skip_words = words_in_best;
         while (*ptr && skip_words > 0) {
             if (*ptr == ' ') skip_words--;
             ptr++;
         }
-        while (*ptr == ' ') ptr++; // skip extra spaces
+        while (*ptr == ' ') ptr++; 
 
         strcpy(corrected, best);
         if (*ptr) {
