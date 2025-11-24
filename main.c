@@ -49,7 +49,7 @@ int main() {
     printf(" 3. Chong Xinhuei\n");
     printf(" 4. Damien Teh\n");
     printf(" 5. Happy Calista\n\n");
-    printf("Date: 24 November 2025\n\n");
+    printf("Date: 25 November 2025\n\n");
 
     while(1) {
         char userinput[256];

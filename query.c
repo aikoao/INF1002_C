@@ -5,7 +5,7 @@
 
 char *strcasestr(const char *haystack, const char *needle) {
     if (!*needle) {
-        return (char *)haystack;  // empty needle matches at start
+        return (char *)haystack;  
     }
 
     for (; *haystack; haystack++) {
@@ -16,18 +16,18 @@ char *strcasestr(const char *haystack, const char *needle) {
             n++;
         }
         if (!*n) {
-            return (char *)haystack;  // match found
+            return (char *)haystack;  
         }
     }
-    return NULL;  // no match
+    return NULL;  
 }
 
 void trimSpaces(char *str) {
-    // Remove starting spaces
+    
     int start = 0;
     while (isspace((unsigned char)str[start])) start++;
     if (start > 0) memmove(str, str + start, strlen(str + start) + 1);
-    // Remove trailing spaces
+    
     int len = strlen(str);
     while (len > 0 && isspace((unsigned char)str[len - 1])) {
         str[len - 1] = '\0';
@@ -66,7 +66,7 @@ void gradeRange(const char *grade, float *min, float *max) {
     else if (strcmp(grade, "B-") == 0) {*min = 60; *max = 64;}
     else if (strcmp(grade, "C+") == 0) {*min = 55; *max = 59;}
     else if (strcmp(grade, "C") == 0) {*min = 50; *max = 54;}
-    else if (strcmp(grade, "D+") == 0) {*min = 45; *max = 49;}  // D+, D, C all have same range in your table
+    else if (strcmp(grade, "D+") == 0) {*min = 45; *max = 49;}  
     else if (strcmp(grade, "D") == 0) {*min = 40; *max = 44;}
     else if (strcmp(grade, "F") == 0) {*min = 0; *max = 39;}
     else {*min = -1; *max = -1;}
@@ -88,7 +88,7 @@ void query_process(const char* input, Student students[], int student_count) {
             reduceInnerSpaces(progVal);
         
             queryStudentByGradeAndProgramme(students, student_count, gradeVal, progVal);
-            return; // Exit after execution
+            return; 
         }
     }
     else if (strstr(input, "ID=") != NULL) {
@@ -120,19 +120,19 @@ void queryStudentByID(Student students[], int student_count, const char* idInput
     char id[16];
     strncpy(id, idInput, 15);
     id[15] = '\0';
-    trimSpaces(id);          // Trim spaces on id copy
+    trimSpaces(id);          
 
     int len = strlen(id), valid = 1, queryId, found = 0;
     if (len != 7) valid = 0;   // Validate length of trimmed string
     for (int i = 0; i < len && valid; i++) {
-        if (!isdigit((unsigned char)id[i])) valid = 0;  // Validate digits in trimmed string
+        if (!isdigit((unsigned char)id[i])) valid = 0;  
     }
     if (!valid) {
         printf("Please input a proper ID (xxxxxxx)\n");
         return;
     }
 
-    sscanf(id, "%d", &queryId);  // Parse from trimmed string
+    sscanf(id, "%d", &queryId);  
 
     for (int i = 0; i < student_count; i++) {
         if (students[i].id == queryId) {
@@ -238,9 +238,9 @@ void queryStudentByGradeAndProgramme(Student students[], int studentcount, const
     queryProg[PROGRAMME_LENGTH - 1] = '\0';
     trimSpaces(queryProg);
     reduceInnerSpaces(queryProg);
-    removeAllSpaces(queryProg);  // Remove spaces for loose matching
+    removeAllSpaces(queryProg);  
     
-    // Search students matching both grade range and programme substring
+    
     for (int i = 0; i < studentcount; i++) {
         char progNoSpace[PROGRAMME_LENGTH];
         strncpy(progNoSpace, students[i].programme, PROGRAMME_LENGTH - 1);
