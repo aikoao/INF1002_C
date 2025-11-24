@@ -4,64 +4,57 @@
 #include <stdlib.h>
 #include "database.h"
 
-// Function to auto cap first letter of each word
+// function to auto cap first letter of each word
 void auto_capitalise(char *str) {
-    int capitalise_next = 1;  // caps first character
+    int capitalise_char = 1;  // caps first character
     
     for (int i = 0; str[i] != '\0'; i++) {
-        if (capitalise_next && isalpha(str[i])) {
+        if (capitalise_char && isalpha(str[i])) {
             str[i] = toupper(str[i]);
-            capitalise_next = 0;
+            capitalise_char = 0;
         } else if (isspace(str[i]) || str[i] == '-' || str[i] == '\'' || str[i] == '.') {
-            capitalise_next = 1;  // Next character should be caps after space or special chars
+            capitalise_char = 1;
         } else {
-            str[i] = tolower(str[i]);  // Make the rest lowercase
+            str[i] = tolower(str[i]);  // lowercase
         }
     }
 }
 
 void update_record(const char *command) {
-    // Save state before making changes
+    // Save state for undo
     save_undo_state("UPDATE operation");
     
-    // Convert entire command to uppercase for case-insensitive checking
+    //  for case-insensitive checking
     char upper_cmd[256];
     strcpy(upper_cmd, command);
     for(int i = 0; upper_cmd[i]; i++) {
         upper_cmd[i] = toupper(upper_cmd[i]);
     }
-    
-    // Strict format checking - must start with exactly "UPDATE ID="
+    // check if start with update id=
     if (strncmp(upper_cmd, "UPDATE ID=", 10) != 0) {
         printf("CMS: Invalid UPDATE format. Use: UPDATE ID=number Field=value\n");
         return;
     }
     
-    // Extract ID - skip "UPDATE ID=" (10 characters)
     const char *id_start = command + 10;
-    
-    // Find the end of ID (whitespace or end of string)
     const char *id_end = id_start;
     while (*id_end && *id_end != ' ') id_end++;
     
-    // Extract ID string
     char id_str[20];
     int id_len = id_end - id_start;
     if (id_len >= 20) id_len = 19;
     strncpy(id_str, id_start, id_len);
     id_str[id_len] = '\0';
     
-    // Proper ID validation
+    // id validation
     char *endptr;
     long id_long = strtol(id_str, &endptr, 10);
 
-    // Check if conversion failed 
     if (endptr == id_str) {
         printf("CMS: Invalid ID '%s'. ID must be a number.\n", id_str);
         return;
     }
 
-    // Check if there are extra characters after the number
     if (*endptr != '\0') {
         printf("CMS: Invalid ID '%s'. ID must contain only numbers.\n", id_str);
         return;
@@ -69,7 +62,6 @@ void update_record(const char *command) {
 
     int search_id = (int)id_long;
     
-    // Find where the field name starts skip any single space after ID
     const char *field_start = id_end;
     if (*field_start == ' ') field_start++;
     
@@ -78,7 +70,7 @@ void update_record(const char *command) {
         return;
     }
     
-    // Check for multiple '=' signs to detect multiple field updates
+    //  to detect multiple field updates
     int equal_count = 0;
     for (const char *p = field_start; *p; p++) {
         if (*p == '=') equal_count++;
@@ -89,26 +81,22 @@ void update_record(const char *command) {
         return;
     }
     
-    // Find the = after field name
     const char *equal_sign = strchr(field_start, '=');
     if (equal_sign == NULL) {
         printf("CMS: Invalid UPDATE format. Use: UPDATE ID=number Field=value\n");
         return;
     }
     
-    // Extract field name,convert to uppercase for comparison
+    // extract field name,convert to uppercase for comparison
     char field[20];
     int field_len = equal_sign - field_start;
     if (field_len >= 20) field_len = 19;
     strncpy(field, field_start, field_len);
     field[field_len] = '\0';
     
-    // Convert field to uppercase for comparison
     for(int i = 0; field[i]; i++) {
         field[i] = toupper(field[i]);
     }
-    
-    // Extract new_value after the =
     const char *value_start = equal_sign + 1;
     
     // Check if value is empty
@@ -117,9 +105,9 @@ void update_record(const char *command) {
         return;
     }
     
-    // CHECK LENGTH before any copying
+    // for checking the length
     int input_length = strlen(value_start);
-    // Validate field-specific length requirements
+    // validation for respective fieldss
     if (strcmp(field, "PROGRAMME") == 0) {
         if (input_length >= PROGRAMME_LENGTH) {
             printf("CMS: Programme name is too long.\n");
@@ -132,13 +120,11 @@ void update_record(const char *command) {
             return;
         }
     }
-    
-    // Only now copy to buffer after validation passes
+    //  copy to buffer after validation passes
     char new_value[PROGRAMME_LENGTH];
     strncpy(new_value, value_start, PROGRAMME_LENGTH - 1);
     new_value[PROGRAMME_LENGTH - 1] = '\0';
     
-    // Find the record
     int record = -1;
     for (int i = 0; i < student_count; i++) {
         if (students[i].id == search_id) {
@@ -146,89 +132,81 @@ void update_record(const char *command) {
             break;
         }
     }
-    
     if (record == -1) {
         printf("CMS: The record with ID=%d does not exist.\n", search_id);
         return;
     }
     
-    // Update the appropriate field
+    //  update the appropriate field
     if (strcmp(field, "MARK") == 0) {
-        // Validate that mark is a valid number
         char *endptr;
         float mark_value = strtof(new_value, &endptr);
         
-        // Check if conversion failed or there are extra characters
         if (endptr == new_value || *endptr != '\0') {
             printf("CMS: Invalid mark value '%s'. Mark must be a number.\n", new_value);
             return;
         }
-        
-        // Check if mark is within valid range (0-100)
+        // check if mark is within range
         if (mark_value < 0.0 || mark_value > 100.0) {
             printf("CMS: Mark must be between 0.0 and 100.0.\n");
             return;
         }
-        
         students[record].mark = mark_value;
         printf("CMS: The record with ID=%d is successfully updated.\n", search_id);
     }
     else if (strcmp(field, "PROGRAMME") == 0) {
-        auto_capitalise(new_value);  // Auto caps before saving
+        auto_capitalise(new_value); 
         strcpy(students[record].programme, new_value);
         printf("CMS: The record with ID=%d is successfully updated.\n", search_id);
     }
     else if (strcmp(field, "NAME") == 0) {
-        // Name input validation - NO NUMBERS ALLOWED
-        int has_alpha = 0;
-        int has_numbers = 0;
-        int has_special_chars = 0;
-        const char *allowed_special = " -.'"; // allow spaces hyphens periods apostrophes
+        // name validation
+        int alphachar = 0;
+        int numberschar = 0;
+        int specialcharac = 0;
+        const char *valid_char = " -.'";
 
         for (int i = 0; new_value[i] != '\0'; i++) {
             if (isalpha(new_value[i])) {
-                has_alpha = 1;
+                alphachar = 1;
             }
             if (isdigit(new_value[i])) {
-                has_numbers = 1;  // Detect any numbers
+                numberschar = 1;  // detect any numbers
             }
             
-            // Check for invalid special characters
+            // check for invalid special characters
             if (!isalpha(new_value[i]) && !isspace(new_value[i])) {
-                // Check if it's a valid special character
                 int is_allowed = 0;
-                for (int j = 0; allowed_special[j] != '\0'; j++) {
-                    if (new_value[i] == allowed_special[j]) {
+                for (int j = 0; valid_char[j] != '\0'; j++) {
+                    if (new_value[i] == valid_char[j]) {
                         is_allowed = 1;
                         break;
                     }
                 }
                 if (!is_allowed) {
-                    has_special_chars = 1;
+                    specialcharac = 1;
                 }
             }
         }
-
-        // Validation checks - STRICTER: NO NUMBERS ALLOWED
-        if (!has_alpha) {
+        // validation checks
+        if (!alphachar) {
             printf("CMS: Name must contain alphabetic characters.\n");
             return;
         }
-        if (has_numbers) {
+        if (numberschar) {
             printf("CMS: Name cannot contain numbers.\n");
             return;
         }
-        if (has_special_chars) {
+        if (specialcharac) {
             printf("CMS: Name can only contain letters, spaces, hyphens (-), periods (.), and apostrophes (').\n");
             return;
         }
-        // Name must start with a letter
+        // name must start with a letter
         if (!isalpha(new_value[0])) {
             printf("CMS: Name must start with a letter.\n");
             return;
         }
-        
-        auto_capitalise(new_value);  // Auto caps before saving
+        auto_capitalise(new_value);
         strcpy(students[record].name, new_value);
         printf("CMS: The record with ID=%d is successfully updated.\n", search_id);
     }
