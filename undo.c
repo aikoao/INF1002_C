@@ -2,7 +2,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include "database.h"
-//undo stack variables
 UndoState undo_stack[UNDO_STACK_SIZE];
 int undo_top = -1;
 
@@ -17,7 +16,6 @@ void save_undo_state(const char *description) {
     } else {
         undo_top++;
     }
-    
     // save current state
     undo_stack[undo_top].student_count = student_count;
     strncpy(undo_stack[undo_top].description, description, sizeof(undo_stack[undo_top].description) - 1);
@@ -50,14 +48,13 @@ void undo_last_command(void) {
     for (int i = 0; i < student_count; i++) {
         students[i] = undo_stack[undo_top].students[i];
     }
-    //clear any extra records in current state
+    //clear any extra records
     for (int i = student_count; i < MAX_RECORDS; i++) {
         students[i].id = 0;
         students[i].name[0] = '\0';
         students[i].programme[0] = '\0';
         students[i].mark = 0.0f;
     }
-    
     printf("CMS: Undo successful. Reverted: %s\n", undo_stack[undo_top].description);
     undo_top--;
 }

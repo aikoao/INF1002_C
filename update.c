@@ -21,7 +21,8 @@ void auto_capitalise(char *str) {
 }
 
 void update_record(const char *command) {
-    // Save state for undo
+
+    // Save state for undo function
     save_undo_state("UPDATE operation");
     
     //  for case-insensitive checking
@@ -69,6 +70,7 @@ void update_record(const char *command) {
         printf("CMS: Please specify which column to update (Name/Programme/Mark)\n");
         return;
     }
+    
     
     //  to detect multiple field updates
     int equal_count = 0;
@@ -161,17 +163,17 @@ void update_record(const char *command) {
     }
     else if (strcmp(field, "NAME") == 0) {
         // name validation
-        int alphachar = 0;
-        int numberschar = 0;
-        int specialcharac = 0;
+        int alpha_char = 0;
+        int numbers_char = 0;
+        int special_char = 0;
         const char *valid_char = " -.'";
 
         for (int i = 0; new_value[i] != '\0'; i++) {
             if (isalpha(new_value[i])) {
-                alphachar = 1;
+                alpha_char = 1;
             }
             if (isdigit(new_value[i])) {
-                numberschar = 1;  // detect any numbers
+                numbers_char = 1;  // detect any numbers
             }
             
             // check for invalid special characters
@@ -184,20 +186,20 @@ void update_record(const char *command) {
                     }
                 }
                 if (!is_allowed) {
-                    specialcharac = 1;
+                    special_char = 1;
                 }
             }
         }
         // validation checks
-        if (!alphachar) {
+        if (!alpha_char) {
             printf("CMS: Name must contain alphabetic characters.\n");
             return;
         }
-        if (numberschar) {
+        if (numbers_char) {
             printf("CMS: Name cannot contain numbers.\n");
             return;
         }
-        if (specialcharac) {
+        if (special_char) {
             printf("CMS: Name can only contain letters, spaces, hyphens (-), periods (.), and apostrophes (').\n");
             return;
         }
